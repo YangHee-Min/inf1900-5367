@@ -35,7 +35,10 @@ PRJSRC= probleme3.cpp
 INC=
 
 # Libraires a lier (ex: -lmylib)
-LIBS=
+LIBS=lib
+
+# Path to library
+PATHLIB= ../../librairie
 
 # Niveau d'optimization
 # Utilisez s (size opt), 1, 2, 3 ou 0 (off)
@@ -133,7 +136,7 @@ all: $(TRG) $(HEXROMTRG)
 # Implementation de la cible
 $(TRG): $(OBJDEPS)
 	$(CC) $(LDFLAGS) -o $(TRG) $(OBJDEPS) \
-	-lm $(LIBS)
+	-L $(PATHLIB) -l$(LIBS)
 
 # Production des fichiers object
 # De C a objet

@@ -4,6 +4,7 @@
 
 #include <avr/io.h>
 #include <util/delay.h>
+#include "../../librairie/lib.h"
 
 uint8_t conversionPourcentage(uint8_t pourcentage){
     uint8_t pwm = 0;
@@ -31,7 +32,7 @@ void ajustementPWM(uint8_t pourcentage){
     if(pourcentage > 100){
         pourcentage = 100;
     }
-    OCR1A = conversionPourcentage(pourcentage);
+    OCR1A = convertPercentInPWM8BitTimer(pourcentage);
     OCR1B = conversionPourcentage(pourcentage);
     // division d'horloge par 8 - implique une frequence de PWM fixe
     TCCR1A |= (1 << COM1A1) | (1 << COM1B1) | (1 << WGM10);
@@ -41,7 +42,7 @@ void ajustementPWM(uint8_t pourcentage){
 
 int main()
 {
-    //Entree
+    //sortie
     DDRD = 0xFF; 
     PORTD |= (1 << PORTD3) | (1 << PORTD6);
 
