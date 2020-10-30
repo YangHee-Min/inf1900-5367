@@ -1,8 +1,7 @@
-#include <util/delay.h>
 #include "motor.h"
 
 //! Function that changes timer value
-void motor::adjustPWM(uint8_t pourcentage, uint8_t ocrnx){
+void Motor::adjustPWM(uint8_t pourcentage, uint8_t ocrnx){
     if(pourcentage > 100){
         pourcentage = 100;
     }
@@ -10,7 +9,7 @@ void motor::adjustPWM(uint8_t pourcentage, uint8_t ocrnx){
 }
 
 //! Function that converts the percentage into a PWM
-uint8_t motor::convertPercentInPWM8BitTimer(uint8_t percentage){
+uint8_t Motor::convertPercentInPWM8BitTimer(uint8_t percentage){
     uint8_t pwm = 0;
     switch(percentage){
         case 0:
@@ -33,7 +32,7 @@ uint8_t motor::convertPercentInPWM8BitTimer(uint8_t percentage){
 }
 
 //! Function that turns the wheel for a set duration at a specified frenquency with the PWM
-void motor::turnMotorPWM(double PWM, double frequency, uint8_t direction, double duration, volatile uint8_t& port){
+void Motor::turnMotorPWM(double PWM, double frequency, uint8_t direction, double duration, volatile uint8_t& port){
 
     // Change method to have E and D pins
 	const int ON = direction;

@@ -1,10 +1,10 @@
+#ifndef DEL_H
+#define DEL_H
+
 #define F_CPU 8000000UL
 #define __DELAY_BACKWARD_COMPATIBLE__
 #include <util/delay.h>
 #include <avr/io.h>
-
-#ifndef DEL_H
-#define DEL_H
 
 class Del {
     public:

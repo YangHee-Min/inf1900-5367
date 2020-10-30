@@ -3,7 +3,7 @@
 
 #include <avr/io.h> 
 
-class uart{
+class Uart{
     public:
         void initialisationUART();
         void transmissionUART(uint8_t donnee);
