@@ -20,7 +20,9 @@ bool buttonIsPressed(uint8_t button, volatile uint8_t& pin){
 }
 
 //! Function that turns the wheel for a set duration at a specified frenquency with the PWM
-void turnMotorPWM(double PWM, double frequency, uint8_t direction, double duration, volatile uint8_t& pin){
+void turnMotorPWM(double PWM, double frequency, uint8_t direction, double duration, volatile uint8_t& port){
+
+    // Change method to have E and D pins
 	const int ON = direction;
 	const int OFF = 0;
 	const double PERIOD = 1/frequency * 1000; 
@@ -29,9 +31,9 @@ void turnMotorPWM(double PWM, double frequency, uint8_t direction, double durati
     double upTime = PERIOD * PWM;
     double downTime = PERIOD - upTime;
 	for(int i = 0; i< numberCycles; i++){
-		pin = ON;
+		port = ON;
 		_delay_ms(upTime);
-		pin = OFF;
+		port = OFF;
 		_delay_ms(downTime);
 	}
 }
@@ -65,7 +67,7 @@ uint8_t convertPercentInPWM8BitTimer(uint8_t percentage){
     return pwm;
 }
 //! Function that changes timer value
-void ajustPWM(uint8_t pourcentage, uint8_t ocrnx){
+void adjustPWM(uint8_t pourcentage, uint8_t ocrnx){
     if(pourcentage > 100){
         pourcentage = 100;
     }

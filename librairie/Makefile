@@ -18,13 +18,19 @@ OPTLEVEL=s
 BASENAME=lib
 
 # Nom du fichier source de la librairie
-SRC=$(BASENAME).cpp
+SRC=$(wildcard *.cpp)
+
+# Nom du repertoire des fichiers sources
+SRC_DIR= src
 
 # Pour chaque objet .cpp produit, produitre un objet .o
 OBJ=$(SRC:.cpp=.o)
 
 # Liste des fichiers headers
-HEADERS= $(BASENAME).h
+HEADERS= $(SRC:.cpp=.h)
+
+# Nom du repertoire des fichiers headers
+INC_DIR= include
 
 # Nom de la librairie
 LIB=lib$(BASENAME).a
@@ -43,8 +49,7 @@ $(LIB):$(OBJ) $(HEADERS)
 	ar -rcs $(LIB) $(OBJ)
 	$(REMOVE) *.d *.o 
 
-%.o: %.cpp
-	@echo "attempting to compile file $(%.c)"
+%.o: %.cpp %.h
 	$(CC)  $(CFLAGS) $(CXXFLAGS) -c $<
 
 clean:
