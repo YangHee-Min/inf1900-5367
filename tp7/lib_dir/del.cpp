@@ -1,7 +1,3 @@
-#include <avr/io.h>
-#include <util/delay.h>
-#define F_CPU 8000000UL
-#define __DELAY_BACKWARD_COMPATIBLE__
 #include "del.h"
 
 //! Function that makes a DEL blink

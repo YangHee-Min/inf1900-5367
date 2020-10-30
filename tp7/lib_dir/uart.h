@@ -5,8 +5,8 @@
 
 class Uart{
     public:
-        void initialisationUART();
-        void transmissionUART(uint8_t donnee);
+        static void initialisation();
+        static void transmission(uint8_t donnee);
     private:
 };
 #endif /*UART_H*/

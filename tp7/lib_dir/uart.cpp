@@ -1,6 +1,6 @@
 #include "./uart.h"
 
-void Uart::initialisationUART () {
+void Uart::initialisation() {
     // 2400 bauds. Nous vous donnons la valeur des deux
     // premier registres pour vous éviter des complications
     UBRR0H = 0;
@@ -12,7 +12,7 @@ void Uart::initialisationUART () {
     UCSR0C = (1 << USBS0) |  (3<<UCSZ00);
 }
 
-void Uart::transmissionUART ( uint8_t donnee ) {
+void Uart::transmission( uint8_t donnee ) {
     while (!(UCSR0A & (1<<UDRE0))){};
     UDR0 = donnee;
 }
