@@ -8,7 +8,7 @@ void blinking(int del, uint8_t delay, volatile uint8_t& pin);
 
 uint8_t convertPercentInPWM8BitTimer(uint8_t percentage);
 
-void ajustPWM(uint8_t pourcentage, uint8_t ocrnx);
+void adjustPWM(uint8_t pourcentage, uint8_t ocrnx);
 
 void initialisationUART (void);
 
