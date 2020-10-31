@@ -22,6 +22,7 @@ void initialisationUART ( void ) {
 
 // De l'USART vers le PC
 void transmissionUART ( uint8_t donnee ) {
+    while (!(UCSR0A & (1<<UDRE0))){};
     UDR0 = donnee;
 }
 
