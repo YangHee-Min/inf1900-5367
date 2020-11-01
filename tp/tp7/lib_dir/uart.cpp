@@ -12,7 +12,7 @@ void Uart::initialisation() {
     UCSR0C = (1 << USBS0) |  (3<<UCSZ00);
 }
 
-void Uart::transmission( uint8_t donnee ) {
+void Uart::transmission( uint8_t info ) {
     while (!(UCSR0A & (1<<UDRE0))){};
     UDR0 = donnee;
 }
