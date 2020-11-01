@@ -1,5 +1,9 @@
 #include "./uart.h"
 
+Uart::Uart(){
+    initialisation();
+}
+
 void Uart::initialisation() {
     // 2400 bauds. Nous vous donnons la valeur des deux
     // premier registres pour vous éviter des complications
