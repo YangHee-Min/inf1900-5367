@@ -1,11 +1,11 @@
 #include "motor.h"
 
 //! Function that changes timer value
-void Motor::adjustPWM(uint8_t pourcentage, uint8_t ocrnx){
-    if(pourcentage > 100){
-        pourcentage = 100;
+void Motor::adjustPWM(uint8_t percentage, uint8_t ocrnx){
+    if(percentage > 100){
+        percentage = 100;
     }
-    ocrnx = convertPercentInPWM8BitTimer(pourcentage);
+    ocrnx = convertPercentInPWM8BitTimer(percentage);
 }
 
 //! Function that converts the percentage into a PWM
