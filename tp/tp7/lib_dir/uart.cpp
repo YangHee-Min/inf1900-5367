@@ -1,3 +1,11 @@
+/**********************************
+* Fichier: uart.cpp
+* Auteurs: Adam Halim, Chun Yang Li, Hee-Min Yang, Jean Janssen
+* Date: 3 novembre 2020
+* Mis à jour: 1 novembre 2020
+* Description: Implémentation des méthodes liées avec UART et RS232
+***********************************/
+
 #include "./uart.h"
 
 Uart::Uart(){
