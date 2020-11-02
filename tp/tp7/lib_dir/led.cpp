@@ -18,13 +18,13 @@
 //!                         (e.g. PORTA, PORTB, PORTC, PORTD)
 void Led::blink(uint8_t ledPinSource, uint8_t ledPinGround, uint8_t delay, volatile uint8_t& port){
     // Set source led pin
-    port |= 1 << ledPin;
+    port |= 1 << ledPinSource;
     // Clear ground led pin
-    port &= ~(1 << ledPinGround)
+    port &= ~(1 << ledPinGround);
     _delay_ms(delay);
 
-    //Turns the specified pin back to 0
-    port &= ~(1 << ledPin);
+    //Turns the specified source pin back to 0
+    port &= ~(1 << ledPinSource);
     _delay_ms(delay);
 }
 
