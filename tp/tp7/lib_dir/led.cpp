@@ -12,20 +12,18 @@
 //! \param ledPinSource     pin to which the led gives the current
 //!                         (e.g. PORTA2)
 //! \param ledPinGround     pin that has 0 as value to receive current.
-//! \param delay            Time in ms for which the light will be 
-//!                         lit then turned off
+//! \param duration         Time in ms for which the light will be lit 
 //! \param port             Port to which the LED is linked to.
 //!                         (e.g. PORTA, PORTB, PORTC, PORTD)
-void Led::blink(uint8_t ledPinSource, uint8_t ledPinGround, uint8_t delay, volatile uint8_t& port){
+void Led::blink(uint8_t ledPinSource, uint8_t ledPinGround, uint8_t duration, volatile uint8_t& port){
     // Set source led pin
     port |= 1 << ledPinSource;
     // Clear ground led pin
     port &= ~(1 << ledPinGround);
-    _delay_ms(delay);
+    _delay_ms(duration);
 
     //Turns the specified source pin back to 0
     port &= ~(1 << ledPinSource);
-    _delay_ms(delay);
 }
 
 //! Function specifies if the specific button is still pressed 
