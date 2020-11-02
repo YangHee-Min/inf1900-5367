@@ -20,7 +20,7 @@ OBJ=$(SRC:.cpp=.o)
 # Liste des fichiers headers
 HEADERS= $(SRC:.cpp=.h)
 
-# Nom de la librairie
+# Nom du fichier de la librairie
 LIB=lib$(LIBNAME).a
 
 CFLAGS=-I. -I/usr/include/simavr  -MMD $(INC) -g -mmcu=$(MCU) -O$(OPTLEVEL) \

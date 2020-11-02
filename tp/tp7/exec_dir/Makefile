@@ -33,7 +33,7 @@ PRJSRC=
 INC=
 
 # Libraires a lier (ex: -lmylib)
-LIBS=lib
+LIBS=$(LIBNAME)
 
 # Path to library
 PATHLIB= ../../$(LIB_FOLDER)
