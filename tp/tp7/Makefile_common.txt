@@ -9,7 +9,7 @@ CC=avr-gcc
 LIBNAME=lib
 
 # Nom du repertoire contenant la librairie
-LIBFOLDER=tp7/lib_dir
+LIBFOLDER=tp/tp7/lib_dir
 
 # Nom du fichier source de la librairie
 SRC=$(wildcard *.cpp)

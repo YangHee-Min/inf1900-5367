@@ -1,22 +1,16 @@
-########       AVR Project Makefile       ########
-#####                                        #####
-#####      Makefile produit et ecrit par     #####
-#####   Simon Barrette & Jerome Collin pour  #####
-#####           INF1900 - 2016               #####
-#####                                        #####
-#####         Inspire de Pat Deegan -        #####
-#####  Psychogenic Inc (www.psychogenic.com) #####
-##################################################
-
-# Ce Makefile vous permet de compiler des projets
-# pour les microcontroleurs Atmel AVR sur 
-# Linux ou Unix, en utilisant l'outil AVR-GCC. 
-# Ce Makefile supporte C & C++
+# Fichier: Makefile
+# Auteurs: Adam Halim, Chun Yang Li, Hee-Min Yang, Jean Janssen
+# Date: November 3 2020
+# Mis à jour: November 1 2020
+# Description: 	Makefile qui génère la librairie
+# 				Inspiré du makefile fourni par le Makefile créé par 
+#				Simon Barrette & Jerome Collin
 
 
 #####      Details specifique a la cible       #####
 #####  Vous devez les adapter a votre projet   #####
 
+# Inclusion des variables définis dans Makefile_commons.txt
 include ../../tp7/Makefile_common.txt
 
 # Nom de votre projet
@@ -36,7 +30,7 @@ INC=
 LIBS=$(LIBNAME)
 
 # Path to library
-PATHLIB= ../../$(LIB_FOLDER)
+PATHLIB= ../../../$(LIB_FOLDER)
 
 # Niveau d'optimization
 # Utilisez s (size opt), 1, 2, 3 ou 0 (off)
