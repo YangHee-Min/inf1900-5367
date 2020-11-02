@@ -16,8 +16,8 @@
 
 class Led {
     public:
-        void blink(int del, uint8_t delay, volatile uint8_t& pin);
-        bool buttonIsPressed(uint8_t button, volatile uint8_t& pin);
+        static void blink(int del, uint8_t delay, volatile uint8_t& pin);
+        static bool buttonIsPressed(uint8_t button, volatile uint8_t& pin);
     private:
 };
 #endif

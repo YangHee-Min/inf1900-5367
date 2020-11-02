@@ -19,7 +19,7 @@ public:
 
     static void turnMotorPWM(double PWM, double frequency, uint8_t direction, double duration, volatile uint8_t& port);
     static uint8_t convertPercentInPWM8BitTimer(uint8_t percentage);
-    static void adjustPWM(uint8_t percentage, uint8_t ocrnx);
+    static void adjustPWM(uint8_t percentage, volatile uint8_t& ocrnx);
 };
 
 #endif /*MOTOR_H*/

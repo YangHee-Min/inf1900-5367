@@ -20,7 +20,7 @@ void Led::blink(uint8_t ledPin, uint8_t delay, volatile uint8_t& port){
     _delay_ms(delay);
 
     //Turns the specified pin back to 0
-    port ^= 1 << ledPin;
+    port &= ~(1 << ledPin);
     _delay_ms(delay);
 }
 
@@ -31,9 +31,9 @@ void Led::blink(uint8_t ledPin, uint8_t delay, volatile uint8_t& port){
 //! \return True if button D2 is pressed for specified debounce 
 //!         time. False otherwise.
 bool Led::buttonIsPressed(uint8_t button, volatile uint8_t& port){
-    const double DELAI_REBOND = 10;
+    const double DEBOUNCE_DELAY = 10;
     if (port & (1 << button)){
-        _delay_ms(DELAI_REBOND);
+        _delay_ms(DEBOUNCE_DELAY);
         if (port & (1 << button)){
               return true;      
         }
