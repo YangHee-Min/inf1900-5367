@@ -9,14 +9,18 @@
 #include "led.h"
 
 //! Function that makes a specific LED blink.
-//! \param led      pin to which the led receives the current
-//!                 (e.g. PORTA2)
-//! \param delay    Time in ms for which the light will be 
-//!                 lit then turned off
-//! \param port     Port to which the LED is linked to.
-//!                 (e.g. PORTA, PORTB, PORTC, PORTD)
-void Led::blink(uint8_t ledPin, uint8_t delay, volatile uint8_t& port){
+//! \param ledPinSource     pin to which the led gives the current
+//!                         (e.g. PORTA2)
+//! \param ledPinGround     pin that has 0 as value to receive current.
+//! \param delay            Time in ms for which the light will be 
+//!                         lit then turned off
+//! \param port             Port to which the LED is linked to.
+//!                         (e.g. PORTA, PORTB, PORTC, PORTD)
+void Led::blink(uint8_t ledPinSource, uint8_t ledPinGround, uint8_t delay, volatile uint8_t& port){
+    // Set source led pin
     port |= 1 << ledPin;
+    // Clear ground led pin
+    port &= ~(1 << ledPinGround)
     _delay_ms(delay);
 
     //Turns the specified pin back to 0
