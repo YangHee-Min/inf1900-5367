@@ -10,8 +10,11 @@
 #####      Details specifique a la cible       #####
 #####  Vous devez les adapter a votre projet   #####
 
+# Chemin vers répertoire de la librairie qui contient Makefile_commons.txt
+PATHLIB= 
+
 # Inclusion des variables définis dans Makefile_commons.txt
-include ../../tp7/Makefile_common.txt
+include $(PATHLIB)/Makefile_common.txt
 
 # Nom de votre projet
 # (utilisez un seul mot, exemple: 'monprojet')
@@ -28,9 +31,6 @@ INC=
 
 # Libraires a lier (ex: -lmylib)
 LIBS=$(LIBNAME)
-
-# Path to library
-PATHLIB= ../../../$(LIB_FOLDER)
 
 # Niveau d'optimization
 # Utilisez s (size opt), 1, 2, 3 ou 0 (off)

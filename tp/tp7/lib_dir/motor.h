@@ -17,7 +17,7 @@
 class Motor {
 public:
 
-    static void turnMotorPWM(double PWM, double frequency, uint8_t direction, double duration, volatile uint8_t& port);
+    static void turnMotorPWM(double PWM, double frequency, uint8_t directionPin, uint8_t enablePin, double duration, volatile uint8_t& port);
     static uint8_t convertPercentInPWM8BitTimer(uint8_t percentage);
     static void adjustPWM(uint8_t percentage, volatile uint8_t& ocrnx);
 };
