@@ -15,7 +15,7 @@
 //! \param duration         Time in ms for which the light will be lit 
 //! \param port             Port to which the LED is linked to.
 //!                         (e.g. PINA, PINB, PINC, PIND)
-void Led::blink(uint8_t ledPinSource, uint8_t ledPinGround, uint8_t duration, volatile uint8_t& pinx){
+void Led::blink(uint8_t ledPinSource, uint8_t ledPinGround, uint8_t duration, volatile uint8_t& port){
     // Set source led pin
     port |= 1 << ledPinSource;
     // Clear ground led pin
