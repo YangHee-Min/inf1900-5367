@@ -11,13 +11,13 @@
 
 #define F_CPU 8000000UL
 #define __DELAY_BACKWARD_COMPATIBLE__
-#include <util/delay.h>
 #include <avr/io.h>
+#include <util/delay.h>
 
 class Led {
     public:
-        static void blink(uint8_t ledPinSource, uint8_t ledPinGround, uint8_t duration, volatile uint8_t& port);
-        static bool buttonIsPressed(uint8_t button, volatile uint8_t& pin);
+        static void blink(uint8_t ledPinSource, uint8_t ledPinGround, uint8_t duration, volatile uint8_t& pinx);
+        static bool buttonIsPressed(uint8_t button, volatile uint8_t& pinx);
     private:
 };
 #endif

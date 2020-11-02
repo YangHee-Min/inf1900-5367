@@ -14,4 +14,5 @@ $(LIB):$(OBJ) $(HEADERS)
 	$(CC)  $(CFLAGS) $(CXXFLAGS) -c $<
 
 clean:
-	$(REMOVE) *.d *.o 
+	$(REMOVE) *.d *.o
+#####                    EOF                   #####

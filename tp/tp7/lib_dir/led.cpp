@@ -14,8 +14,8 @@
 //! \param ledPinGround     pin that has 0 as value to receive current.
 //! \param duration         Time in ms for which the light will be lit 
 //! \param port             Port to which the LED is linked to.
-//!                         (e.g. PORTA, PORTB, PORTC, PORTD)
-void Led::blink(uint8_t ledPinSource, uint8_t ledPinGround, uint8_t duration, volatile uint8_t& port){
+//!                         (e.g. PINA, PINB, PINC, PIND)
+void Led::blink(uint8_t ledPinSource, uint8_t ledPinGround, uint8_t duration, volatile uint8_t& pinx){
     // Set source led pin
     port |= 1 << ledPinSource;
     // Clear ground led pin
@@ -32,11 +32,11 @@ void Led::blink(uint8_t ledPinSource, uint8_t ledPinGround, uint8_t duration, vo
 //! \param  port    port that has the button pin
 //! \return True if button D2 is pressed for specified debounce 
 //!         time. False otherwise.
-bool Led::buttonIsPressed(uint8_t button, volatile uint8_t& port){
+bool Led::buttonIsPressed(uint8_t button, volatile uint8_t& pinx){
     const double DEBOUNCE_DELAY = 10;
-    if (port & (1 << button)){
+    if (pinx & (1 << button)){
         _delay_ms(DEBOUNCE_DELAY);
-        if (port & (1 << button)){
+        if (pinx & (1 << button)){
               return true;      
         }
     }

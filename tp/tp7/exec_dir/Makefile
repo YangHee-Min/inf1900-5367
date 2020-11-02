@@ -10,11 +10,11 @@
 #####      Details specifique a la cible       #####
 #####  Vous devez les adapter a votre projet   #####
 
-# Chemin vers répertoire de la librairie qui contient Makefile_commons.txt
-PATHLIB= 
+# Chemin vers répertoire de la librairie 
+PATHLIB=../../../tp/tp7/lib_dir
 
 # Inclusion des variables définis dans Makefile_commons.txt
-include $(PATHLIB)/Makefile_common.txt
+include $(PATHLIB)/../Makefile_common.txt
 
 # Nom de votre projet
 # (utilisez un seul mot, exemple: 'monprojet')
@@ -114,7 +114,7 @@ all: $(TRG) $(HEXROMTRG)
 
 # Implementation de la cible
 $(TRG): $(OBJDEPS)
-	$(CC) $(LDFLAGS) -o $(TRG) $(OBJDEPS) \
+	$(CC) -static $(LDFLAGS) -o $(TRG) $(OBJDEPS) \
 	-L $(PATHLIB) -l$(LIBS)
 
 # Production des fichiers object
@@ -147,16 +147,4 @@ install: $(HEXROMTRG)
 # lors de la compilation
 clean:
 	$(REMOVE) $(TRG) $(TRG).map $(OBJDEPS) $(HEXTRG) *.d
-
-# Pour plus d'information sur les phony target, consulter:
-# http://bit.ly/1WBQe61
-
-# De plus, pour mieux comprendre les makefiles et 
-# leur fonctionnement, consulter la documentation de GNU Make:
-# http://bit.ly/23Vpk8s
-
-# Finalement, ce tutoriel en ligne constitut une bonne 
-# introduction au Makefile:
-# http://bit.ly/1XvxsN3
-
 #####                    EOF                   #####
