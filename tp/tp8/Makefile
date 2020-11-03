@@ -1,41 +1,36 @@
-########       AVR Project Makefile       ########
-#####                                        #####
-#####      Makefile produit et ecrit par     #####
-#####   Simon Barrette & Jerome Collin pour  #####
-#####           INF1900 - 2016               #####
-#####                                        #####
-#####         Inspire de Pat Deegan -        #####
-#####  Psychogenic Inc (www.psychogenic.com) #####
-##################################################
-
-# Ce Makefile vous permet de compiler des projets
-# pour les microcontroleurs Atmel AVR sur 
-# Linux ou Unix, en utilisant l'outil AVR-GCC. 
-# Ce Makefile supporte C & C++
+# Fichier: Makefile
+# Auteurs: Adam Halim, Chun Yang Li, Hee-Min Yang, Jean Janssen
+# Date: November 3 2020
+# Mis à jour: November 1 2020
+# Description: 	Makefile qui génère la librairie
+# 				Inspiré du makefile fourni par le Makefile créé par 
+#				Simon Barrette & Jerome Collin
 
 
 #####      Details specifique a la cible       #####
 #####  Vous devez les adapter a votre projet   #####
 
-# Nom du microcontroleur cible
-# (exemple: 'at90s8515')
-MCU=atmega324pa
+# Chemin vers répertoire de la librairie 
+PATHLIB=../../tp/tp7/lib_dir
+
+# Inclusion des variables définis dans Makefile_commons.txt
+include $(PATHLIB)/../Makefile_common.txt
 
 # Nom de votre projet
 # (utilisez un seul mot, exemple: 'monprojet')
-PROJECTNAME=TP2probleme2
+PROJECTNAME=tp8pb1
 
 # Fichiers sources
 # Utilisez le suffixe .cpp pour les fichiers C++
 # Listez tous les fichiers a compiler, separes par
 # un espace. exemple: 'tp1.c tp2.cpp':
-PRJSRC= probleme2.cpp
+PRJSRC=probleme1.cpp 
 
 # Inclusions additionnels (ex: -I/path/to/mydir)
 INC=
 
-# Libraires a lier (ex: -lmylib)
-LIBS=
+# Librairies a lier (ex: -lmylib)
+LIBS=$(LIBNAME)
 
 # Niveau d'optimization
 # Utilisez s (size opt), 1, 2, 3 ou 0 (off)
@@ -60,29 +55,16 @@ AVRDUDE_PROGRAMMERID=usbasp
 
 ####### variables #######
 
-#compilateur utilise
-CC=avr-gcc
 #pour copier le contenu d'un fichier objet vers un autre
 OBJCOPY=avr-objcopy
 #pour permettre le transfert vers le microcontroleur
 AVRDUDE=avrdude
-#pour supprimer les fichiers lorsque l'on appel make clean
-REMOVE=rm -f
 # HEXFORMAT -- format pour les fichiers produient .hex
 HEXFORMAT=ihex
 
 
 
 ####### Options de compilation #######
-
-# Flags pour le compilateur en C
-CFLAGS=-I. -I/usr/include/simavr  -MMD $(INC) -g -mmcu=$(MCU) -O$(OPTLEVEL) \
-	-fpack-struct -fshort-enums             \
-	-funsigned-bitfields -funsigned-char    \
-	-Wall                                        
-
-# Flags pour le compilateur en C++
-CXXFLAGS=-fno-exceptions     
 
 # Linker pour lier les librairies utilisees
 LDFLAGS=-Wl,-Map,$(TRG).map -mmcu=$(MCU)
@@ -110,12 +92,6 @@ CPPFILES=$(filter %.cpp, $(PRJSRC))
 # Liste de tout les fichiers objet que nous devons creer
 OBJDEPS=$(CFILES:.c=.o) \
 	$(CPPFILES:.cpp=.o)
-	
-# Pour plus d'information sur cette section, consulter :
-# http://bit.ly/257R53E	
-# Les fonctions $(filter pattern…,text) &
-# $(patsubst pattern,replacement,text) sont pertinentes
-	
 
 
 ####### Creation des commandes du Makefile ####### 
@@ -130,10 +106,14 @@ OBJDEPS=$(CFILES:.c=.o) \
 #
 all: $(TRG) $(HEXROMTRG)
 
+# Definition de la macro DEBUG si on fait un make debug
+debug: CFLAGS += -DDEBUG -g
+debug: all
+
 # Implementation de la cible
 $(TRG): $(OBJDEPS)
-	$(CC) $(LDFLAGS) -o $(TRG) $(OBJDEPS) \
-	-lm $(LIBS)
+	$(CC) -static $(LDFLAGS) -o $(TRG) $(OBJDEPS) \
+	-L $(PATHLIB) -l$(LIBS)
 
 # Production des fichiers object
 # De C a objet
@@ -146,8 +126,6 @@ $(TRG): $(OBJDEPS)
 # Verification des dependances (header dependencies)
 -include *.d
 
-# Pour plus d'information sur cette section, consulter:
-# http://bit.ly/2580FU8
 
 # Production des fichiers hex a partir des fichiers elf
 %.hex: %.elf
@@ -165,16 +143,4 @@ install: $(HEXROMTRG)
 # lors de la compilation
 clean:
 	$(REMOVE) $(TRG) $(TRG).map $(OBJDEPS) $(HEXTRG) *.d
-
-# Pour plus d'information sur les phony target, consulter:
-# http://bit.ly/1WBQe61
-
-# De plus, pour mieux comprendre les makefiles et 
-# leur fonctionnement, consulter la documentation de GNU Make:
-# http://bit.ly/23Vpk8s
-
-# Finalement, ce tutoriel en ligne constitut une bonne 
-# introduction au Makefile:
-# http://bit.ly/1XvxsN3
-
 #####                    EOF                   #####

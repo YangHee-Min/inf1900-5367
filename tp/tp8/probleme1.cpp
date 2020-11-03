@@ -32,7 +32,7 @@ _______________________________________________________
 #define F_CPU 8000000UL
 #include <avr/io.h>
 #include <util/delay.h>
-#include "../../../tp/tp7/lib_dir/debug.h"
+#include "../tp7/lib_dir/debug.h"
 
 //! Fonction qui indique si le bouton spécifié est toujours appuyé 
 //! après le délai de rebond.
@@ -85,10 +85,10 @@ int main()
         //!            diagramme d'état) est satisfaite.
         switch(etatPresent)
         {
-            case INIT:
+            case INIT:{
                 #ifdef DEBUG
-                char initMSG[5] = "INIT";
-                debug.DEBUG_PRINT(initMSG, 4);
+                char initMSG[7] = "INIT\n";
+                debug.DEBUG_PRINT(initMSG, 7);
                 #endif
 
                 PORTA = ETEINT;
@@ -96,34 +96,34 @@ int main()
                     etatPresent = ROUGE0;
                 else if(vientDePeserSurD2OuD3 && pinEstAppuye(PIND3))
                     etatPresent = VERT0;
-                break;
+                }break;
 
-            case VERT0:
+            case VERT0:{
                 #ifdef DEBUG
-                char vert0MSG[6] = "vert0";
-                debug.DEBUG_PRINT(vert0MSG, 5);
+                char vert0MSG[8] = "vert0\n";
+                debug.DEBUG_PRINT(vert0MSG, 8);
                 #endif
 
                 PORTA = VERT;
                 if(vientDePeserSurD2OuD3 && pinEstAppuye(PIND2))
                     etatPresent = ROUGE0;
-                break;
+                }break;
 
-            case ROUGE0:
+            case ROUGE0:{
                 #ifdef DEBUG
-                char rouge0MSG[7] = "rouge0";
-                debug.DEBUG_PRINT(rouge0MSG, 6);
+                char rouge0MSG[9] = "rouge0\n";
+                debug.DEBUG_PRINT(rouge0MSG, 9);
                 #endif
 
                 PORTA = ROUGE;
                 if(vientDePeserSurD2OuD3 && pinEstAppuye(PIND3))
                     etatPresent = VERT1;
-                break;
+                }break;
 
-            case VERT1:
+            case VERT1:{
                 #ifdef DEBUG
-                char vert1MSG[6] = "vert1";
-                debug.DEBUG_PRINT(vert1MSG, 5);
+                char vert1MSG[8] = "vert1\n";
+                debug.DEBUG_PRINT(vert1MSG, 8);
                 #endif
 
                 PORTA = VERT;
@@ -131,18 +131,19 @@ int main()
                     etatPresent = ROUGE1;
                 else if(vientDePeserSurD2OuD3 && pinEstAppuye(PIND3))
                     etatPresent = INIT;
-                break;
+                }break;
 
-            case ROUGE1:
+            case ROUGE1:{
                 #ifdef DEBUG
-                char rouge1MSG[7] = "rouge1";
-                debug.DEBUG_PRINT(rouge1MSG, 6);
+                char rouge1MSG[9] = "rouge1\n";
+                debug.DEBUG_PRINT(rouge1MSG, 9);
                 #endif
 
                 PORTA = ROUGE;
                 if(vientDePeserSurD2OuD3 && pinEstAppuye(PIND2))
                     etatPresent = VERT1;
-        }
+                }
+            }
         derniereEntreePortD = entreePortD;  
     } 
 }
