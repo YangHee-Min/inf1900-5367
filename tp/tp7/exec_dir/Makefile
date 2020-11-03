@@ -29,7 +29,7 @@ PRJSRC=
 # Inclusions additionnels (ex: -I/path/to/mydir)
 INC=
 
-# Libraires a lier (ex: -lmylib)
+# Librairies a lier (ex: -lmylib)
 LIBS=$(LIBNAME)
 
 # Niveau d'optimization
