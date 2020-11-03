@@ -1,36 +1,44 @@
-# Fichier: Makefile
-# Auteurs: Adam Halim, Chun Yang Li, Hee-Min Yang, Jean Janssen
-# Date: November 3 2020
-# Mis à jour: November 1 2020
-# Description: 	Makefile qui génère la librairie
-# 				Inspiré du makefile fourni par le Makefile créé par 
-#				Simon Barrette & Jerome Collin
+########       AVR Project Makefile       ########
+#####                                        #####
+#####      Makefile produit et ecrit par     #####
+#####   Simon Barrette & Jerome Collin pour  #####
+#####           INF1900 - 2016               #####
+#####                                        #####
+#####         Inspire de Pat Deegan -        #####
+#####  Psychogenic Inc (www.psychogenic.com) #####
+##################################################
+
+# Ce Makefile vous permet de compiler des projets
+# pour les microcontroleurs Atmel AVR sur 
+# Linux ou Unix, en utilisant l'outil AVR-GCC. 
+# Ce Makefile supporte C & C++
 
 
 #####      Details specifique a la cible       #####
 #####  Vous devez les adapter a votre projet   #####
 
-# Chemin vers répertoire de la librairie 
-PATHLIB=
-
-# Inclusion des variables définis dans Makefile_commons.txt
-include $(PATHLIB)/../Makefile_common.txt
+# Nom du microcontroleur cible
+# (exemple: 'at90s8515')
+MCU=atmega324pa
 
 # Nom de votre projet
 # (utilisez un seul mot, exemple: 'monprojet')
-PROJECTNAME=
+PROJECTNAME=TP4probleme3
 
 # Fichiers sources
 # Utilisez le suffixe .cpp pour les fichiers C++
 # Listez tous les fichiers a compiler, separes par
 # un espace. exemple: 'tp1.c tp2.cpp':
-PRJSRC= 
+PRJSRC= probleme3.cpp
 
 # Inclusions additionnels (ex: -I/path/to/mydir)
 INC=
 
-# Librairies a lier (ex: -lmylib)
-LIBS=$(LIBNAME)
+# Libraires a lier (ex: -lmylib)
+LIBS=lib
+
+# Path to library
+PATHLIB= ../../librairie
 
 # Niveau d'optimization
 # Utilisez s (size opt), 1, 2, 3 ou 0 (off)
@@ -55,16 +63,29 @@ AVRDUDE_PROGRAMMERID=usbasp
 
 ####### variables #######
 
+#compilateur utilise
+CC=avr-gcc
 #pour copier le contenu d'un fichier objet vers un autre
 OBJCOPY=avr-objcopy
 #pour permettre le transfert vers le microcontroleur
 AVRDUDE=avrdude
+#pour supprimer les fichiers lorsque l'on appel make clean
+REMOVE=rm -f
 # HEXFORMAT -- format pour les fichiers produient .hex
 HEXFORMAT=ihex
 
 
 
 ####### Options de compilation #######
+
+# Flags pour le compilateur en C
+CFLAGS=-I. -I/usr/include/simavr  -MMD $(INC) -g -mmcu=$(MCU) -O$(OPTLEVEL) \
+	-fpack-struct -fshort-enums             \
+	-funsigned-bitfields -funsigned-char    \
+	-Wall                                        
+
+# Flags pour le compilateur en C++
+CXXFLAGS=-fno-exceptions     
 
 # Linker pour lier les librairies utilisees
 LDFLAGS=-Wl,-Map,$(TRG).map -mmcu=$(MCU)
@@ -114,7 +135,7 @@ all: $(TRG) $(HEXROMTRG)
 
 # Implementation de la cible
 $(TRG): $(OBJDEPS)
-	$(CC) -static $(LDFLAGS) -o $(TRG) $(OBJDEPS) \
+	$(CC) $(LDFLAGS) -o $(TRG) $(OBJDEPS) \
 	-L $(PATHLIB) -l$(LIBS)
 
 # Production des fichiers object
@@ -147,4 +168,16 @@ install: $(HEXROMTRG)
 # lors de la compilation
 clean:
 	$(REMOVE) $(TRG) $(TRG).map $(OBJDEPS) $(HEXTRG) *.d
+
+# Pour plus d'information sur les phony target, consulter:
+# http://bit.ly/1WBQe61
+
+# De plus, pour mieux comprendre les makefiles et 
+# leur fonctionnement, consulter la documentation de GNU Make:
+# http://bit.ly/23Vpk8s
+
+# Finalement, ce tutoriel en ligne constitut une bonne 
+# introduction au Makefile:
+# http://bit.ly/1XvxsN3
+
 #####                    EOF                   #####
