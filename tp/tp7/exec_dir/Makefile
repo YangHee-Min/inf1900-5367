@@ -92,12 +92,6 @@ CPPFILES=$(filter %.cpp, $(PRJSRC))
 # Liste de tout les fichiers objet que nous devons creer
 OBJDEPS=$(CFILES:.c=.o) \
 	$(CPPFILES:.cpp=.o)
-	
-# Pour plus d'information sur cette section, consulter :
-# http://bit.ly/257R53E	
-# Les fonctions $(filter pattern…,text) &
-# $(patsubst pattern,replacement,text) sont pertinentes
-	
 
 
 ####### Creation des commandes du Makefile ####### 
@@ -128,8 +122,6 @@ $(TRG): $(OBJDEPS)
 # Verification des dependances (header dependencies)
 -include *.d
 
-# Pour plus d'information sur cette section, consulter:
-# http://bit.ly/2580FU8
 
 # Production des fichiers hex a partir des fichiers elf
 %.hex: %.elf
