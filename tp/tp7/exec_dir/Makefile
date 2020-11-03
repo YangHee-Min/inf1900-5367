@@ -11,7 +11,7 @@
 #####  Vous devez les adapter a votre projet   #####
 
 # Chemin vers répertoire de la librairie 
-PATHLIB=../../../tp/tp7/lib_dir
+PATHLIB=
 
 # Inclusion des variables définis dans Makefile_commons.txt
 include $(PATHLIB)/../Makefile_common.txt
