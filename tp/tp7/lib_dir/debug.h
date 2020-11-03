@@ -1,15 +1,11 @@
-#include <string>
-#include <algorithm>
-#include <memory>
+#include "string.h"
 #include "./uart.h"
 
 class Debug{
-
 public:
     Debug();
-    Debug(Uart uart);
-    void DEBUG_PRINT(const std::string debugMessage);
-    //void DEBUG_PRINT(const int number);
+    ~Debug();
+    void DEBUG_PRINT(const char debugMessage[], const unsigned int size);
 private:
-    std::unique_ptr<Uart> uart_;
+    Uart uart_;
 };

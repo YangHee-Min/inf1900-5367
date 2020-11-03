@@ -1,14 +1,14 @@
 #include "./debug.h"
 
 Debug::Debug(){
-    uart_ = std::make_unique<Uart>(Uart());
+    uart_ = Uart();
 }
 
-Debug::Debug(Uart uart){
-    uart_ = std::make_unique<Uart>(&uart);
+Debug::~Debug(){
 }
 
-Debug::DEBUG_PRINT(const std::string message){
-    std::for_each(&message.begin(), &message.end(), uart_->transmission);
+void Debug::DEBUG_PRINT(const char debugMessage[], const unsigned int size){
+    for ( unsigned int currentIndex = 0; currentIndex < size; currentIndex++ ) {
+            uart_.transmission(currentIndex);
+        }
 }
-
