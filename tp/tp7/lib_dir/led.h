@@ -16,6 +16,8 @@
 
 class Led {
     public:
+        static void turnOn(uint8_t ledPinSource, uint8_t ledPinGround, volatile uint8_t& port);
+        static void turnOff(uint8_t ledPinSource, volatile uint8_t& port); 
         static void blink(uint8_t ledPinSource, uint8_t ledPinGround, uint8_t duration, volatile uint8_t& port);
         static bool buttonIsPressed(uint8_t button, volatile uint8_t& pinx);
     private:

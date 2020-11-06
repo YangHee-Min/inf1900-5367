@@ -8,6 +8,27 @@
 
 #include "led.h"
 
+//! Function that turns on the LED
+//! \param ledPinSource     pin to which the led gives the current
+//!                         (e.g. PORTA2)
+//! \param ledPinGround     pin that has 0 as value to receive current.
+//! \param port             Port to which the LED is linked to.
+//!                         (e.g. PINA, PINB, PINC, PIND)
+Led::turnOn(uint8_t ledPinSource, uint8_t ledPinGround, volatile uint8_t& port){
+    port |= 1 << ledPinSource;
+    // Clear ground led pin
+    port &= ~(1 << ledPinGround);
+}
+
+//! Function that turns off the LED
+//! \param ledPinSource     pin to which the led gives the current
+//!                         (e.g. PORTA2)
+//! \param port             Port to which the LED is linked to.
+//!                         (e.g. PINA, PINB, PINC, PIND)
+Led::turnOff(uint8_t ledPinSource, volatile uint8_t& port){
+    port &= ~(1 << ledPinSource);
+}
+
 //! Function that makes a specific LED blink.
 //! \param ledPinSource     pin to which the led gives the current
 //!                         (e.g. PORTA2)
@@ -17,13 +38,11 @@
 //!                         (e.g. PINA, PINB, PINC, PIND)
 void Led::blink(uint8_t ledPinSource, uint8_t ledPinGround, uint8_t duration, volatile uint8_t& port){
     // Set source led pin
-    port |= 1 << ledPinSource;
-    // Clear ground led pin
-    port &= ~(1 << ledPinGround);
+    turnOn(ledPinSource, ledPinGround, port);
     _delay_ms(duration);
 
     //Turns the specified source pin back to 0
-    port &= ~(1 << ledPinSource);
+    turnOff(ledPinSource, port);
 }
 
 //! Function specifies if the specific button is still pressed 
