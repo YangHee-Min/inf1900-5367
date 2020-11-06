@@ -14,7 +14,7 @@ LIBFOLDER=tp/tp7/lib_dir
 # Nom du fichier source de la librairie
 SRC=$(wildcard *.cpp)
 
-# Pour chaque objet .cpp produit, produitre un objet .o
+# Pour chaque objet .cpp produit, produire un objet .o
 OBJ=$(SRC:.cpp=.o)
 
 # Liste des fichiers headers

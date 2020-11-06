@@ -33,3 +33,12 @@ void Uart::transmission(uint8_t data){
     while (!(UCSR0A & (1<<UDRE0))){};
     UDR0 = data;
 }
+
+
+void Uart::write(uint8_t instruction, uint8_t operand){
+    uint16_t instructionOperand = ((instruction << 8) | (operand));
+    eeprom_write_block((const uint8_t*) &instructionOperand, (void*)0x0000, sizeof(instructionOperand));
+    transmission(instruction);
+    transmission(operand);
+}
+
