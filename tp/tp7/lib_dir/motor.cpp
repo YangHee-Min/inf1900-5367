@@ -8,6 +8,22 @@
 
 #include "motor.h"
 
+Motor::Motor(){
+    DDRD = PORT_SORTIE;
+    // Set timer to 0
+    TCNT1 = 0;
+
+    // If instantiating multiple motor classes, we won't instantiate 
+    // registers more than once.
+    #ifndef MOTOR
+    #define MOTOR
+    // Clock division by 8 - Implies a fixed PWM frequency
+    TCCR1A |= (1 << COM1A1) | (1 << COM1B1) | (1 << WGM10);
+    TCCR1B |= (1 << CS11);
+    TCCR1C = 0;
+    #endif
+}
+
 //! Function that changes timer value
 //! \param percentage   PWM percentage wanted
 //! \param ocrnx        PWM generating pin (oc1a or oc1b)
@@ -45,6 +61,7 @@ uint8_t Motor::convertPercentInPWM8BitTimer(uint8_t percentage){
 }
 
 //! Function that turns the wheel for a set duration at a specified frenquency with the PWM
+//! Note that this method is used in the case where we are not using TCNT as the PWM timer.
 //! \param PWM              Pwm in percentage wanted for the motor
 //! \param frequency        Frequency of the pwm wave
 //! \param directionPin     Pin that is responsible for the direction of the H bridge
