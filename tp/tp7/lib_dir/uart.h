@@ -15,7 +15,7 @@
 class Uart{
     public:
         Uart();
-        void transmission(uint8_t info);
+        void transmission(uint8_t data);
     private:
         void initialisation();
 };
