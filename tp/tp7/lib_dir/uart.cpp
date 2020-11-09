@@ -35,10 +35,13 @@ void Uart::transmission(uint8_t data){
 }
 
 
-void Uart::write(uint8_t instruction, uint8_t operand){
-    uint16_t instructionOperand = ((instruction << 8) | (operand));
-    eeprom_write_block((const uint8_t*) &instructionOperand, (void*)0x0000, sizeof(instructionOperand));
-    transmission(instruction);
-    transmission(operand);
+void Uart::write(const char debugMessage[], const unsigned int size){
+    for ( unsigned int currentIndex = 0; currentIndex < size; currentIndex++ ) {
+            transmission(debugMessage[currentIndex]);
+        }
+}
+
+uint16_t Uart::receiveWord(const uint16_t* address){
+    return eeprom_read_word(address);
 }
 
