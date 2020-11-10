@@ -11,5 +11,5 @@ int main(){
     PORTB = 0xFF;
     PORTC = 0xFF;
     PORTD = 0xFF;
-	readFile(PORTA0, PORTA1, PORTA, PORTD1, PORTD2, PORTB, PORTC);
+	readFile(PORTA0, PORTA1, PORTA, PORTD1, PORTD2, PORTC, PORTB);
 }

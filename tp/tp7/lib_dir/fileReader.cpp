@@ -31,7 +31,6 @@ void FileReader::readFile(uint8_t ledPinGreen, uint8_t ledPinRed,
         switch(instruction8Bits){
             case DBT:
                 uart_.write("dbt", SIZE);
-
                 Led::blink(ledPinGreen, ledPinRed, duration_s, BicolorLedPort);
                 break;
 
