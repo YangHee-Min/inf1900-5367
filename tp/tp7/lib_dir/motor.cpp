@@ -27,11 +27,16 @@ Motor::Motor(){
 //! Function that changes timer value
 //! \param percentage   PWM percentage wanted
 //! \param ocrnx        PWM generating pin (oc1a or oc1b)
-void Motor::adjustPWM(uint8_t percentage, volatile uint8_t& ocrnx){
+/*void Motor::adjustPWM(uint8_t percentage, uint8_t directionPin, uint8_t directionValue, volatile uint8_t& ocrnx){
     if(percentage > 100){
         percentage = 100;
     }
+    PORTD = (directionValue == 0) ? PORTD & ~(1 << directionPin): PORTD | (1 << directionPin);
     ocrnx = convertPercentInPWM8BitTimer(percentage);
+}*/
+void Motor::adjustPWM(uint8_t pwm, uint8_t directionPin, uint8_t directionValue, uint16_t& ocrnx){
+    PORTD = (directionValue == 0) ? PORTD & ~(1 << directionPin): PORTD | (1 << directionPin);
+    ocrnx = pwm;
 }
 
 //! Function that converts the percentage into a PWM

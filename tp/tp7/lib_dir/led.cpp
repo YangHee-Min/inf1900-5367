@@ -14,7 +14,7 @@
 //! \param ledPinGround     pin that has 0 as value to receive current.
 //! \param port             Port to which the LED is linked to.
 //!                         (e.g. PINA, PINB, PINC, PIND)
-Led::turnOn(uint8_t ledPinSource, uint8_t ledPinGround, volatile uint8_t& port){
+void Led::turnOn(uint8_t ledPinSource, uint8_t ledPinGround, volatile uint8_t& port){
     port |= 1 << ledPinSource;
     // Clear ground led pin
     port &= ~(1 << ledPinGround);
@@ -25,7 +25,7 @@ Led::turnOn(uint8_t ledPinSource, uint8_t ledPinGround, volatile uint8_t& port){
 //!                         (e.g. PORTA2)
 //! \param port             Port to which the LED is linked to.
 //!                         (e.g. PINA, PINB, PINC, PIND)
-Led::turnOff(uint8_t ledPinSource, volatile uint8_t& port){
+void Led::turnOff(uint8_t ledPinSource, volatile uint8_t& port){
     port &= ~(1 << ledPinSource);
 }
 
@@ -43,21 +43,3 @@ void Led::blink(uint8_t ledPinSource, uint8_t ledPinGround, uint8_t duration, vo
 
     //Turns the specified source pin back to 0
     turnOff(ledPinSource, port);
-}
-
-//! Function specifies if the specific button is still pressed 
-//! after the debounce delay.
-//! \param  button  pin that is connected to the button
-//! \param  port    port that has the button pin
-//! \return True if button D2 is pressed for specified debounce 
-//!         time. False otherwise.
-bool Led::buttonIsPressed(uint8_t button, volatile uint8_t& pinx){
-    const double DEBOUNCE_DELAY = 10;
-    if (pinx & (1 << button)){
-        _delay_ms(DEBOUNCE_DELAY);
-        if (pinx & (1 << button)){
-              return true;      
-        }
-    }
-    return false;
-}

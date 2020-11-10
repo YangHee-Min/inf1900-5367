@@ -16,7 +16,7 @@ class Uart{
     public:
         Uart();
         void transmission(uint8_t data); 
-        void write(const char debugMessage[], const unsigned int size);
+        void write(const char message[], const unsigned int size);
         uint16_t receiveWord(const uint16_t* address);
     private:
         void initialisation();

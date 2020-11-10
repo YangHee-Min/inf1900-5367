@@ -34,10 +34,11 @@ void Uart::transmission(uint8_t data){
     UDR0 = data;
 }
 
-
-void Uart::write(const char debugMessage[], const unsigned int size){
+//! Function that writes a message to serial monitor
+//! \param message 
+void Uart::write(const char message[], const unsigned int size){
     for ( unsigned int currentIndex = 0; currentIndex < size; currentIndex++ ) {
-            transmission(debugMessage[currentIndex]);
+            transmission(message[currentIndex]);
         }
 }
 
