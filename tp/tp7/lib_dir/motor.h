@@ -19,7 +19,7 @@ public:
     Motor();
     void turnMotorPWM(double PWM, double frequency, uint8_t directionPin, uint8_t enablePin, double duration, volatile uint8_t& port);
     uint8_t convertPercentInPWM8BitTimer(uint8_t percentage);
-    void adjustPWM(uint8_t pwm, uint8_t directionPin, uint8_t directionValue, uint16_t& ocrnx);
+    void adjustPWM(uint8_t pwm, uint8_t directionPin, uint8_t directionValue, volatile uint16_t& ocrnx);
 private:
     const uint8_t PORT_SORTIE = 0xFF;
 };

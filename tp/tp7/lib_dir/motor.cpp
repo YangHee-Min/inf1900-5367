@@ -34,7 +34,7 @@ Motor::Motor(){
     PORTD = (directionValue == 0) ? PORTD & ~(1 << directionPin): PORTD | (1 << directionPin);
     ocrnx = convertPercentInPWM8BitTimer(percentage);
 }*/
-void Motor::adjustPWM(uint8_t pwm, uint8_t directionPin, uint8_t directionValue, uint16_t& ocrnx){
+void Motor::adjustPWM(uint8_t pwm, uint8_t directionPin, uint8_t directionValue,volatile uint16_t& ocrnx){
     PORTD = (directionValue == 0) ? PORTD & ~(1 << directionPin): PORTD | (1 << directionPin);
     ocrnx = pwm;
 }

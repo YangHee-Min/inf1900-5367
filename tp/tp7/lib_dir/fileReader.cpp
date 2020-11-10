@@ -70,44 +70,44 @@ void FileReader::readFile(uint8_t ledPinGreen, uint8_t ledPinRed,
 
             case MAR1:
                 uart_.write("mar", SIZE);
-                motor_.adjustPWM(OFF, directionPinLeft, FORWARD, OCR1A);
-                motor_.adjustPWM(OFF, directionPinRight, FORWARD, &(*rightWheel_));
+                motor_.adjustPWM(OFF, directionPinLeft, FORWARD, (*leftWheel_));
+                motor_.adjustPWM(OFF, directionPinRight, FORWARD, (*rightWheel_));
                 ThreeByThreeLedPort = NOT_MOVING;
                 break;
 
             case MAR2:
                 uart_.write("mar", SIZE);
-                motor_.adjustPWM(OFF, directionPinLeft, FORWARD, &(*leftWheel_));
-                motor_.adjustPWM(OFF, directionPinRight, FORWARD, &(*rightWheel_));
+                motor_.adjustPWM(OFF, directionPinLeft, FORWARD, (*leftWheel_));
+                motor_.adjustPWM(OFF, directionPinRight, FORWARD, (*rightWheel_));
 				ThreeByThreeLedPort = NOT_MOVING;
 				break;
 
 			case MAV:
                 uart_.write("mav", SIZE);
-                motor_.adjustPWM(operand8Bits, directionPinLeft, FORWARD, &(*leftWheel_));
-                motor_.adjustPWM(operand8Bits, directionPinRight, FORWARD, &(*rightWheel_));
+                motor_.adjustPWM(operand8Bits, directionPinLeft, FORWARD, (*leftWheel_));
+                motor_.adjustPWM(operand8Bits, directionPinRight, FORWARD, (*rightWheel_));
 				ThreeByThreeLedPort = MOVING_FORWARD;
 				break;
 
 			case MRE:
                 uart_.write("mre", SIZE);
                
-                motor_.adjustPWM(operand8Bits, directionPinLeft, BACKWARD, &(*leftWheel_));
-                motor_.adjustPWM(operand8Bits, directionPinRight, BACKWARD, &(*rightWheel_));
+                motor_.adjustPWM(operand8Bits, directionPinLeft, BACKWARD, (*leftWheel_));
+                motor_.adjustPWM(operand8Bits, directionPinRight, BACKWARD, (*rightWheel_));
 				ThreeByThreeLedPort = MOVING_BACKWARD;
 				break;
 
 			case TRD:  
                 uart_.write("trd", SIZE);
-                motor_.adjustPWM(TURNING_PWM, directionPinLeft, FORWARD,  &(*leftWheel_));
-                motor_.adjustPWM(TURNING_PWM, directionPinRight, BACKWARD, &(*rightWheel_));
+                motor_.adjustPWM(TURNING_PWM, directionPinLeft, FORWARD,  (*leftWheel_));
+                motor_.adjustPWM(TURNING_PWM, directionPinRight, BACKWARD, (*rightWheel_));
 				ThreeByThreeLedPort = TURNING_RIGHT;
 				break;
 
 			case TRG:  
                 uart_.write("trg", SIZE);
-                motor_.adjustPWM(TURNING_PWM, directionPinLeft, BACKWARD,  &(*leftWheel_));
-                motor_.adjustPWM(TURNING_PWM, directionPinRight, FORWARD, &(*rightWheel_));
+                motor_.adjustPWM(TURNING_PWM, directionPinLeft, BACKWARD, (*leftWheel_));
+                motor_.adjustPWM(TURNING_PWM, directionPinRight, FORWARD, (*rightWheel_));
                 ThreeByThreeLedPort = TURNING_LEFT;
                 break;
 

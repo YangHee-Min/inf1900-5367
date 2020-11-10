@@ -43,3 +43,4 @@ void Led::blink(uint8_t ledPinSource, uint8_t ledPinGround, uint8_t duration, vo
 
     //Turns the specified source pin back to 0
     turnOff(ledPinSource, port);
+}
