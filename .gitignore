@@ -7,7 +7,7 @@
 *.a
 *_backup.simu
 *.data
-*TEST.txt
+*.txt
 *.bin
 progeeprom
 sendBinToSimulide
