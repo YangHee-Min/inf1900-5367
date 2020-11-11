@@ -27,7 +27,7 @@ void Led::turnOff(){
 
 //! Function that makes a specific LED blink.
 //! \param duration     Time in ms for which the light will be lit 
-void Led::blink(uint8_t duration){
+void Led::blink(int duration){
     turnOn();
     _delay_ms(duration);
 

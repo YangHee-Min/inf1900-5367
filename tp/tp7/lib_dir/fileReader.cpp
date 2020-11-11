@@ -10,11 +10,13 @@ FileReader::FileReader(Motor* leftMotorPtr, Motor* rightMotorPtr, Led* greenLedP
 void FileReader::readFile(volatile uint8_t& FourByFourLedPort, 
                             volatile uint8_t& ThreeByThreeLedPort){
     
+    const int S_TO_MS_FACTOR = 1000;
+
     int right = 1;
     int left = -1;
     int duration_s = 2;
 
-    uint16_t address = 0x0002;
+    uint16_t address = 0x0000;
     bool programIsRunning = true;
     int NORTH = 0;
     MatrixLedThreeByThree matrixLed = MatrixLedThreeByThree(NORTH);
@@ -22,17 +24,12 @@ void FileReader::readFile(volatile uint8_t& FourByFourLedPort,
     uint8_t initLoopAddress = 0;
 
     for(;programIsRunning;address += 2){
-        uint16_t instructionOperand = uart_.receiveWord(address);
-        
-        uint16_t instruction16Bits = instructionOperand >> 8;
-        uint8_t instruction8Bits = instruction16Bits;
-
-        uint16_t operand16Bits = instructionOperand & ~(0xff << 8);
-        uint8_t operand8Bits = operand16Bits;
+        uint8_t instruction = uart_.readByte(address);
+        uint8_t operand = uart_.readByte(address+1);
         
         int att_delay_ms;
 
-        switch(instruction8Bits){
+        switch(instruction){
             case DBT:
                 uart_.write("dbt", SIZE);
                 greenLedPtr_->blink(duration_s);
@@ -40,17 +37,17 @@ void FileReader::readFile(volatile uint8_t& FourByFourLedPort,
 
             case ATT:
                 uart_.write("att", SIZE);
-                att_delay_ms = 25 * operand8Bits;
+                att_delay_ms = 25 * operand;
 				_delay_ms(att_delay_ms);
                 break;
 
 			case DAL:
                 uart_.write("dal", SIZE);
-                if(operand8Bits >= 0 && operand8Bits <= 127){
+                if(operand >= 0 && operand <= 127){
                     greenLedPtr_->turnOn();
                     
                 }
-                else if(operand8Bits > 127 && operand8Bits <= 254){
+                else if(operand > 127 && operand <= 254){
                     redLedPtr_->turnOn();
                 }
                 break;
@@ -63,7 +60,7 @@ void FileReader::readFile(volatile uint8_t& FourByFourLedPort,
 
 			case MON:
                 uart_.write("mon", SIZE);
-                FourByFourLedPort = operand8Bits;
+                FourByFourLedPort = operand;
                 break;
 
             case MOF:
@@ -80,15 +77,15 @@ void FileReader::readFile(volatile uint8_t& FourByFourLedPort,
 
 			case MAV:
                 uart_.write("mav", SIZE);
-                leftMotorPtr_->adjustPWM(operand8Bits, Motor::FORWARD);
-                rightMotorPtr_->adjustPWM(operand8Bits, Motor::FORWARD);
+                leftMotorPtr_->adjustPWM(operand, Motor::FORWARD);
+                rightMotorPtr_->adjustPWM(operand, Motor::FORWARD);
 				break;
 
 			case MRE:
                 uart_.write("mre", SIZE);
                
-                leftMotorPtr_->adjustPWM(operand8Bits, Motor::BACKWARD);
-                rightMotorPtr_->adjustPWM(operand8Bits, Motor::BACKWARD);
+                leftMotorPtr_->adjustPWM(operand, Motor::BACKWARD);
+                rightMotorPtr_->adjustPWM(operand, Motor::BACKWARD);
 				break;
 
 			case TRD:  
@@ -96,8 +93,7 @@ void FileReader::readFile(volatile uint8_t& FourByFourLedPort,
                 leftMotorPtr_->adjustPWM(TURNING_PWM, Motor::FORWARD);
                 rightMotorPtr_->adjustPWM(TURNING_PWM, Motor::BACKWARD);
                 
-                leftMotorPtr_->delaySeconds(duration_s);
-                rightMotorPtr_->delaySeconds(duration_s);
+                _delay_ms(duration_s * S_TO_MS_FACTOR);
 
                 leftMotorPtr_->stop();
                 rightMotorPtr_->stop();
@@ -110,8 +106,7 @@ void FileReader::readFile(volatile uint8_t& FourByFourLedPort,
                 leftMotorPtr_->adjustPWM(TURNING_PWM, Motor::BACKWARD);
                 rightMotorPtr_->adjustPWM(TURNING_PWM, Motor::FORWARD);
 
-                leftMotorPtr_->delaySeconds(duration_s);
-                rightMotorPtr_->delaySeconds(duration_s);
+                _delay_ms(duration_s * S_TO_MS_FACTOR);
 
                 leftMotorPtr_->stop();
                 rightMotorPtr_->stop();
@@ -122,7 +117,7 @@ void FileReader::readFile(volatile uint8_t& FourByFourLedPort,
             case DBC:
                 uart_.write("dbc", SIZE);
 				initLoopAddress = address;
-				decrementation = operand8Bits;
+				decrementation = operand;
 				break;
                 
 			case FBC:

@@ -20,7 +20,7 @@ class Led {
         Led(uint8_t pinSource, uint8_t pinGround, volatile uint8_t& port);
         void turnOn();
         void turnOff(); 
-        void blink(uint8_t duration);
+        void blink(int duration);
         bool buttonIsPressed(uint8_t button, volatile uint8_t& pinx);
     private:
 		uint8_t pinSource_;

@@ -25,14 +25,5 @@ void readProgram(){
 
 int main(){
     initialisation();
-    
-    Uart uart;
-    uint16_t initialAddress = 0x0000;
-    uint16_t word = uart.receiveWord(initialAddress);
-
-    char ONE = (word >> 8);
-    char TWO = ((word << 8) >> 8);
-    char table[3] = {ONE, TWO};
-    uart.write(table, 3);
-    uart.write("end", 4);
+    readProgram();
 }

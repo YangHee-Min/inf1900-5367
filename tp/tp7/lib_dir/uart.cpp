@@ -10,7 +10,7 @@
 
 //! Default constructor for the UART class. Uses the initialisation function.
 Uart::Uart(){
-    initialisation();
+    //initialisation();
 }
 
 //! Function that initialises the UART registers to enable the reception and transmission
@@ -39,11 +39,11 @@ void Uart::transmission(uint8_t data){
 void Uart::write(const char message[], const unsigned int size){
     for ( unsigned int currentIndex = 0; currentIndex < size; currentIndex++ ) {
             transmission(message[currentIndex]);
-        }
+    }
 }
 
-//! Function that reads word at certain address.
-uint16_t Uart::receiveWord(const uint16_t address){
-    return eeprom_read_word((uint16_t*) address);
+//! Function that reads byte at certain address.
+uint8_t Uart::readByte(const uint16_t address){
+    uint16_t returnByte = eeprom_read_byte((uint8_t*) address);
+    return returnByte;
 }
-
