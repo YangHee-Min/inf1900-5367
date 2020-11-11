@@ -7,7 +7,7 @@
 *              list of actions to be performed by the hardware. 
 *              Then stores it onto the eeprom and executes the 
 *              instructions in order.
-* Materials: 1 Atmega324pa, 1 3D LED matrix, 1 4D LED matrix, 
+* Materials: 1 Atmega324a, 1 3D LED matrix, 1 4D LED matrix, 
 *            1 bi-color LED, 2 wheels and 1 H-Bridge, 
 ***********************************/
 #define OUTPUT_PORT 0xFF
