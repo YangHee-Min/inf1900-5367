@@ -1,7 +1,7 @@
 /**********************************
 * File: led.h
 * Authors: Adam Halim, Chun Yang Li, Hee-Min Yang, Jean Janssen
-* Date: November 3 2020
+* Date: November 1 2020
 * Updated: November 1 2020
 * Description: Definition of methods related to LEDs.
 ***********************************/

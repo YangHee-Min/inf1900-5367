@@ -2,8 +2,8 @@
 * File: motor.h
 * Authors: Adam Halim, Chun Yang Li, Hee-Min Yang, Jean Janssen
 * Date: November 3 2020
-* Updated: November 1 2020
-* Description: Implementation of methods related to Motor.
+* Updated: November 11 2020
+* Description: Definition of methods related to Motor.
 ***********************************/
 
 #ifndef MOTOR_H

@@ -1,6 +1,6 @@
 # Fichier: Makefile
 # Auteurs: Adam Halim, Chun Yang Li, Hee-Min Yang, Jean Janssen
-# Date: November 3 2020
+# Date: November 1 2020
 # Mis à jour: November 1 2020
 # Description: Makefile qui génère la librairie
 

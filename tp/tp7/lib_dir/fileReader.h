@@ -1,5 +1,5 @@
 /**********************************
-* File: fileReader.cpp
+* File: fileReader.h
 * Authors: Adam Halim, Chun Yang Li, Hee-Min Yang, Jean Janssen
 * Date: November 11 2020
 * Updated: November 11 2020

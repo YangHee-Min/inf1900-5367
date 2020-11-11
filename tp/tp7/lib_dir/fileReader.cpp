@@ -164,6 +164,7 @@ void FileReader::readFileFromEeprom(){
 //! Function that sends file from USART to the eeprom.
 void FileReader::sendFileToEeprom(){
     uart_.print("Starting transmission from USART to EEPROM...\n", 46);
+    uart_.print("Please send the eeprom data by RS232\n", 38);
     for(;;){
         uint8_t currentUsartByte = uart_.sendUsartToEeprom();
         if(currentUsartByte == FIN)
