@@ -1,24 +1,28 @@
 #include "./fileReader.h"
 
-FileReader::FileReader():rightWheel_(&OCR1B), leftWheel_(&OCR1B){
+FileReader::FileReader(Motor* leftMotorPtr, Motor* rightMotorPtr, Led* greenLedPtr, Led* redLedPtr):
+    leftMotorPtr_(leftMotorPtr),
+    rightMotorPtr_(rightMotorPtr),
+    greenLedPtr_(greenLedPtr),
+    redLedPtr_(redLedPtr){
 }
 
-void FileReader::readFile(uint8_t ledPinGreen, uint8_t ledPinRed, 
-                            volatile uint8_t& BicolorLedPort, 
-                            uint8_t directionPinLeft,
-                            uint8_t directionPinRight, 
-                            volatile uint8_t& FourByFourLedPort, 
+void FileReader::readFile(volatile uint8_t& FourByFourLedPort, 
                             volatile uint8_t& ThreeByThreeLedPort){
     
+    int right = 1;
+    int left = -1;
+    int duration_s = 2;
+
     uint16_t address = 0x0002;
-
     bool programIsRunning = true;
-
+    int NORTH = 0;
+    MatrixLedThreeByThree matrixLed = MatrixLedThreeByThree(NORTH);
     uint8_t decrementation = 0;
     uint8_t initLoopAddress = 0;
 
     for(;programIsRunning;address += 2){
-        uint16_t instructionOperand = uart_.receiveWord((const uint16_t*) address);
+        uint16_t instructionOperand = uart_.receiveWord(address);
         
         uint16_t instruction16Bits = instructionOperand >> 8;
         uint8_t instruction8Bits = instruction16Bits;
@@ -31,7 +35,7 @@ void FileReader::readFile(uint8_t ledPinGreen, uint8_t ledPinRed,
         switch(instruction8Bits){
             case DBT:
                 uart_.write("dbt", SIZE);
-                Led::blink(ledPinGreen, ledPinRed, duration_s, BicolorLedPort);
+                greenLedPtr_->blink(duration_s);
                 break;
 
             case ATT:
@@ -43,18 +47,18 @@ void FileReader::readFile(uint8_t ledPinGreen, uint8_t ledPinRed,
 			case DAL:
                 uart_.write("dal", SIZE);
                 if(operand8Bits >= 0 && operand8Bits <= 127){
-                    Led::turnOn(ledPinGreen, ledPinRed, BicolorLedPort);
+                    greenLedPtr_->turnOn();
                     
                 }
                 else if(operand8Bits > 127 && operand8Bits <= 254){
-                    Led::turnOn(ledPinRed, ledPinGreen, BicolorLedPort);
+                    redLedPtr_->turnOn();
                 }
                 break;
 
 			case DET:
                 uart_.write("det", SIZE);
-				Led::turnOff(ledPinGreen, BicolorLedPort);
-                Led::turnOff(ledPinRed, BicolorLedPort);
+				greenLedPtr_->turnOff();
+                redLedPtr_->turnOff();
 				break;
 
 			case MON:
@@ -64,50 +68,55 @@ void FileReader::readFile(uint8_t ledPinGreen, uint8_t ledPinRed,
 
             case MOF:
                 uart_.write("mof", SIZE);
-                FourByFourLedPort = OFF;
+                FourByFourLedPort = Led::OFF;
                 break;
 
             case MAR1:
-                uart_.write("mar", SIZE);
-                motor_.adjustPWM(OFF, directionPinLeft, FORWARD, (*leftWheel_));
-                motor_.adjustPWM(OFF, directionPinRight, FORWARD, (*rightWheel_));
-                ThreeByThreeLedPort = NOT_MOVING;
-                break;
-
             case MAR2:
                 uart_.write("mar", SIZE);
-                motor_.adjustPWM(OFF, directionPinLeft, FORWARD, (*leftWheel_));
-                motor_.adjustPWM(OFF, directionPinRight, FORWARD, (*rightWheel_));
-				ThreeByThreeLedPort = NOT_MOVING;
+                leftMotorPtr_->stop();
+                rightMotorPtr_->stop();
 				break;
 
 			case MAV:
                 uart_.write("mav", SIZE);
-                motor_.adjustPWM(operand8Bits, directionPinLeft, FORWARD, (*leftWheel_));
-                motor_.adjustPWM(operand8Bits, directionPinRight, FORWARD, (*rightWheel_));
-				ThreeByThreeLedPort = MOVING_FORWARD;
+                leftMotorPtr_->adjustPWM(operand8Bits, Motor::FORWARD);
+                rightMotorPtr_->adjustPWM(operand8Bits, Motor::FORWARD);
 				break;
 
 			case MRE:
                 uart_.write("mre", SIZE);
                
-                motor_.adjustPWM(operand8Bits, directionPinLeft, BACKWARD, (*leftWheel_));
-                motor_.adjustPWM(operand8Bits, directionPinRight, BACKWARD, (*rightWheel_));
-				ThreeByThreeLedPort = MOVING_BACKWARD;
+                leftMotorPtr_->adjustPWM(operand8Bits, Motor::BACKWARD);
+                rightMotorPtr_->adjustPWM(operand8Bits, Motor::BACKWARD);
 				break;
 
 			case TRD:  
                 uart_.write("trd", SIZE);
-                motor_.adjustPWM(TURNING_PWM, directionPinLeft, FORWARD,  (*leftWheel_));
-                motor_.adjustPWM(TURNING_PWM, directionPinRight, BACKWARD, (*rightWheel_));
-				ThreeByThreeLedPort = TURNING_RIGHT;
+                leftMotorPtr_->adjustPWM(TURNING_PWM, Motor::FORWARD);
+                rightMotorPtr_->adjustPWM(TURNING_PWM, Motor::BACKWARD);
+                
+                leftMotorPtr_->delaySeconds(duration_s);
+                rightMotorPtr_->delaySeconds(duration_s);
+
+                leftMotorPtr_->stop();
+                rightMotorPtr_->stop();
+
+				ThreeByThreeLedPort = matrixLed.ledDirection(right);
 				break;
 
 			case TRG:  
                 uart_.write("trg", SIZE);
-                motor_.adjustPWM(TURNING_PWM, directionPinLeft, BACKWARD, (*leftWheel_));
-                motor_.adjustPWM(TURNING_PWM, directionPinRight, FORWARD, (*rightWheel_));
-                ThreeByThreeLedPort = TURNING_LEFT;
+                leftMotorPtr_->adjustPWM(TURNING_PWM, Motor::BACKWARD);
+                rightMotorPtr_->adjustPWM(TURNING_PWM, Motor::FORWARD);
+
+                leftMotorPtr_->delaySeconds(duration_s);
+                rightMotorPtr_->delaySeconds(duration_s);
+
+                leftMotorPtr_->stop();
+                rightMotorPtr_->stop();
+                
+                ThreeByThreeLedPort = matrixLed.ledDirection(left);
                 break;
 
             case DBC:
@@ -127,7 +136,7 @@ void FileReader::readFile(uint8_t ledPinGreen, uint8_t ledPinRed,
 			case FIN:
                 uart_.write("fin", SIZE);
                 programIsRunning = false;
-                Led::blink(ledPinRed, ledPinGreen, duration_s, BicolorLedPort);
+                redLedPtr_->blink(duration_s);
         }       
     }
 }

@@ -1,5 +1,5 @@
 /**********************************
-* File: motor.cpp
+* File: motor.h
 * Authors: Adam Halim, Chun Yang Li, Hee-Min Yang, Jean Janssen
 * Date: November 3 2020
 * Updated: November 1 2020
@@ -10,18 +10,25 @@
 #define MOTOR_H
 
 #define F_CPU 8000000UL
+#define PRESCALER 8
 #define __DELAY_BACKWARD_COMPATIBLE__
 #include <avr/io.h>
 #include <util/delay.h>
 
 class Motor {
 public:
-    Motor();
-    void turnMotorPWM(double PWM, double frequency, uint8_t directionPin, uint8_t enablePin, double duration, volatile uint8_t& port);
-    uint8_t convertPercentInPWM8BitTimer(uint8_t percentage);
-    void adjustPWM(uint8_t pwm, uint8_t directionPin, uint8_t directionValue, volatile uint16_t& ocrnx);
-private:
-    const uint8_t PORT_SORTIE = 0xFF;
-};
+    static const uint8_t OFF = 0;
+    static const uint8_t BACKWARD = 0;
+    static const uint8_t FORWARD = 1;
 
-#endif /*MOTOR_H*/
+    Motor(volatile uint16_t* ocrnxPtr, uint8_t directionPin);
+    void adjustPWM(uint16_t pwm8Bit, uint8_t directionValue);
+    void stop();
+    void turnMotorPWM(double PWM, double frequency, uint8_t enablePin, double duration);
+    uint8_t convertPercentInPWM8BitTimer(uint16_t percentage);
+    void delaySeconds(long unsigned int seconds);
+private:
+    volatile uint16_t* ocrnxPtr_;
+    uint8_t directionPin_;
+};
+#endif

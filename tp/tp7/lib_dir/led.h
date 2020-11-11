@@ -16,10 +16,16 @@
 
 class Led {
     public:
-        static void turnOn(uint8_t ledPinSource, uint8_t ledPinGround, volatile uint8_t& port);
-        static void turnOff(uint8_t ledPinSource, volatile uint8_t& port); 
-        static void blink(uint8_t ledPinSource, uint8_t ledPinGround, uint8_t duration, volatile uint8_t& port);
-        static bool buttonIsPressed(uint8_t button, volatile uint8_t& pinx);
+        static const uint8_t OFF = 0x00;
+        Led(uint8_t pinSource, uint8_t pinGround, volatile uint8_t& port);
+        void turnOn();
+        void turnOff(); 
+        void blink(uint8_t duration);
+        bool buttonIsPressed(uint8_t button, volatile uint8_t& pinx);
     private:
+		uint8_t pinSource_;
+		uint8_t pinGround_;
+        volatile uint8_t* portPtr_;
+
 };
 #endif

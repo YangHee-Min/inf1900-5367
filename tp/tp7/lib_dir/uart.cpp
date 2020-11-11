@@ -42,7 +42,8 @@ void Uart::write(const char message[], const unsigned int size){
         }
 }
 
-uint16_t Uart::receiveWord(const uint16_t* address){
-    return eeprom_read_word(address);
+//! Function that reads word at certain address.
+uint16_t Uart::receiveWord(const uint16_t address){
+    return eeprom_read_word((uint16_t*) address);
 }
 
