@@ -13,8 +13,8 @@ void initialisation(){
 }
 
 void readProgram(){
-    Motor leftMotor = Motor(&OCR1A, PORTD1);
-    Motor rightMotor = Motor(&OCR1B, PORTD2);
+    Motor leftMotor = Motor(&OCR1A, PORTD6);
+    Motor rightMotor = Motor(&OCR1B, PORTD3);
 
     Led greenLed = Led(PORTA0, PORTA1, PORTA);
     Led redLed = Led(PORTA1, PORTA0, PORTA);
@@ -25,14 +25,13 @@ void readProgram(){
 
 
 	FileReader fileReader = FileReader(&leftMotor, &rightMotor, &greenLed, &redLed, &threeLedMatrix, &fourLedMatrix);
-    fileReader.readFile();
+    fileReader.sendFileToEeprom();
+    fileReader.readFileFromEeprom();
 }
 
 int main(){
     initialisation();
-    Uart uart;
-    uart.write("start", 6);
+    Uart uart; 
     readProgram();
-    uart.write("end", 4);
     
 }

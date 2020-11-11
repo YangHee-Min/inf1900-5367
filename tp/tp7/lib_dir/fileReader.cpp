@@ -12,9 +12,7 @@ FileReader::FileReader( Motor* leftMotorPtr, Motor* rightMotorPtr,
     fourByFourMatrixPtr_(fourByFourMatrixPtr){
 }
 
-void FileReader::readFile(){
-
-    uart_.write("WE IN", 6);
+void FileReader::readFileFromEeprom(){
     int duration_ms = 1500;
 
     uint16_t initialAddress = 0x0002;
@@ -27,13 +25,13 @@ void FileReader::readFile(){
     uint8_t initLoopAddress = 0;
 
     for(;programIsRunning;address += 2){
-        uint8_t instruction = uart_.readByte(address);
-        uint8_t operand = uart_.readByte(address+1);
+        uint8_t instruction = uart_.readByteEeprom(address);
+        uint8_t operand = uart_.readByteEeprom(address+1);
         
         int att_delay_ms;
         
         if(instruction == DBT){
-            uart_.write("dbt\n", MNEMONIC_SIZE);
+            uart_.print("dbt\n", MNEMONIC_SIZE);
             programHasStarted = true;
             greenLedPtr_->blink(duration_ms);
         }
@@ -44,13 +42,13 @@ void FileReader::readFile(){
         switch(instruction){
 
             case ATT:
-                uart_.write("att\n", MNEMONIC_SIZE);
+                uart_.print("att\n", MNEMONIC_SIZE);
                 att_delay_ms = 25 * operand;
 				_delay_ms(att_delay_ms);
                 break;
 
 			case DAL:
-                uart_.write("dal\n", MNEMONIC_SIZE);
+                uart_.print("dal\n", MNEMONIC_SIZE);
                 if(operand >= 0 && operand <= 127){
                     greenLedPtr_->turnOn();
                     
@@ -61,43 +59,43 @@ void FileReader::readFile(){
                 break;
 
 			case DET:
-                uart_.write("det\n", MNEMONIC_SIZE);
+                uart_.print("det\n", MNEMONIC_SIZE);
 				greenLedPtr_->turnOff();
                 redLedPtr_->turnOff();
 				break;
 
 			case MON:
-                uart_.write("mon\n", MNEMONIC_SIZE);
+                uart_.print("mon\n", MNEMONIC_SIZE);
                 fourByFourMatrixPtr_->changeLed(operand);
                 break;
 
             case MOF:
-                uart_.write("mof\n", MNEMONIC_SIZE);
+                uart_.print("mof\n", MNEMONIC_SIZE);
                 fourByFourMatrixPtr_->turnOff();
                 break;
 
             case MAR1:
             case MAR2:
-                uart_.write("mar\n", MNEMONIC_SIZE);
+                uart_.print("mar\n", MNEMONIC_SIZE);
                 leftMotorPtr_->stop();
                 rightMotorPtr_->stop();
 				break;
 
 			case MAV:
-                uart_.write("mav\n", MNEMONIC_SIZE);
+                uart_.print("mav\n", MNEMONIC_SIZE);
                 leftMotorPtr_->adjustPWM(operand, Motor::FORWARD);
                 rightMotorPtr_->adjustPWM(operand, Motor::FORWARD);
 				break;
 
 			case MRE:
-                uart_.write("mre\n", MNEMONIC_SIZE);
+                uart_.print("mre\n", MNEMONIC_SIZE);
                
                 leftMotorPtr_->adjustPWM(operand, Motor::BACKWARD);
                 rightMotorPtr_->adjustPWM(operand, Motor::BACKWARD);
 				break;
 
 			case TRD:  
-                uart_.write("trd\n", MNEMONIC_SIZE);
+                uart_.print("trd\n", MNEMONIC_SIZE);
                 threeByThreeMatrixPtr_->turnRight();
 
                 leftMotorPtr_->adjustPWM(Motor::TURNING_PWM, Motor::FORWARD);
@@ -111,7 +109,7 @@ void FileReader::readFile(){
 				break;
 
 			case TRG:  
-                uart_.write("trg\n", MNEMONIC_SIZE);
+                uart_.print("trg\n", MNEMONIC_SIZE);
                 threeByThreeMatrixPtr_->turnLeft();
 
                 leftMotorPtr_->adjustPWM(Motor::TURNING_PWM, Motor::BACKWARD);
@@ -125,13 +123,13 @@ void FileReader::readFile(){
                 break;
 
             case DBC:
-                uart_.write("dbc\n", MNEMONIC_SIZE);
+                uart_.print("dbc\n", MNEMONIC_SIZE);
 				initLoopAddress = address;
 				decrementation = operand;
 				break;
                 
 			case FBC:
-                uart_.write("fbc\n", MNEMONIC_SIZE);
+                uart_.print("fbc\n", MNEMONIC_SIZE);
                 if (decrementation != 0){
                     address = initLoopAddress;
 					decrementation--;
@@ -139,10 +137,22 @@ void FileReader::readFile(){
 				break;
 
 			case FIN:
-                uart_.write("fin\n", MNEMONIC_SIZE);
+                uart_.print("fin\n", MNEMONIC_SIZE);
                 programIsRunning = false;
                 threeByThreeMatrixPtr_->turnOff();
                 redLedPtr_->blink(duration_ms);
         }       
     }
+}
+
+void FileReader::sendFileToEeprom(){
+    uart_.print("Starting transmission from USART to EEPROM...\n", 46);
+    for(;;){
+        uint8_t currentUsartByte = uart_.sendUsartToEeprom();
+        if(currentUsartByte == FIN)
+            break;
+
+        uart_.sendUsartToEeprom();
+    }
+    uart_.print("Sent all to eeprom. Now starting program...\n", 45);
 }

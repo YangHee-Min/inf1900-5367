@@ -16,9 +16,14 @@ class Uart{
     public:
         Uart();
         void transmission(uint8_t data); 
-        void write(const char message[], const unsigned int size);
-        uint8_t readByte(const uint16_t address);
+        void print(const char message[], const unsigned int size);
+        uint8_t sendUsartToEeprom();
+        uint8_t readByteEeprom(const uint16_t address); 
     private:
+        void saveByteEeprom(const uint16_t address, uint8_t byteToSave);
+        uint8_t receiveRS232Byte();
+        static uint16_t currentEepromAddress_;
+        static const uint16_t firstEepromAddress = 0x0000;
         void initialisation();
 };
 #endif /*UART_H*/

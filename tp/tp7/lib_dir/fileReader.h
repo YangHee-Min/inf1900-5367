@@ -14,7 +14,8 @@ class FileReader{
                     MatrixLedThreeByThree* threeByThreeLedPortPtr, 
                     MatrixLedFourByFour* fourByFourMatrixPtr);
 
-        void readFile();
+        void readFileFromEeprom();
+        void sendFileToEeprom();
     private:
         Uart uart_;
         Motor* leftMotorPtr_;
