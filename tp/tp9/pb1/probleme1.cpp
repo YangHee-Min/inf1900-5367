@@ -19,11 +19,20 @@ void readProgram(){
     Led greenLed = Led(PORTA0, PORTA1, PORTA);
     Led redLed = Led(PORTA1, PORTA0, PORTA);
 
-	FileReader fileReader = FileReader(&leftMotor, &rightMotor, &greenLed, &redLed);
-    fileReader.readFile(PORTB, PORTC);
+    MatrixLedFourByFour fourLedMatrix = MatrixLedFourByFour(&PORTC);
+    MatrixLedThreeByThree threeLedMatrix = MatrixLedThreeByThree( MatrixLedThreeByThree::NORTH, &PORTB);
+
+
+
+	FileReader fileReader = FileReader(&leftMotor, &rightMotor, &greenLed, &redLed, &threeLedMatrix, &fourLedMatrix);
+    fileReader.readFile();
 }
 
 int main(){
     initialisation();
+    Uart uart;
+    uart.write("start", 6);
     readProgram();
+    uart.write("end", 4);
+    
 }

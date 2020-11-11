@@ -9,17 +9,32 @@
 #ifndef MATRIXLEDTHREEBYTHREE_H
 #define MATRIXLEDTHREEBYTHREE_H
 
-#define F_CPU 8000000UL
-#define __DELAY_BACKWARD_COMPATIBLE__
-#include <avr/io.h>
+#include "matrixLed.h"
 
 
-class MatrixLedThreeByThree {
+class MatrixLedThreeByThree : public MatrixLed {
     public:
-        MatrixLedThreeByThree(int currentDirection);
-        void setDirection(int direction);
-        uint8_t ledDirection(int turning);
+    enum CardinalDirection {    NORTH, 
+                                EAST, 
+                                SOUTH, 
+                                WEST};
+
+        MatrixLedThreeByThree(int initialDirection, volatile uint8_t* portPtr);
+        void turnLeft();
+        void turnRight();
+
     private:
+        enum LedDirectionValues: uint8_t{   NORTH_LED = 0b01000101,
+                                            EAST_LED = 0b00100011,
+                                            SOUTH_LED = 0b00010101, 
+                                            WEST_LED = 0b00100110};
+
+        enum Direction{ LEFT = -1, 
+                        RIGHT = 1};
+
 		int currentDirection_;
+
+        void changeLedDirection(int direction);
+        void setDirection(int direction);
 };
 #endif

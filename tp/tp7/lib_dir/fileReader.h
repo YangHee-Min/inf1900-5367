@@ -5,36 +5,41 @@
 #include "./led.h"
 #include "./motor.h"
 #include "./matrixLedThreeByThree.h"
+#include "./matrixLedFourByFour.h"
 
 class FileReader{
     public:
-        FileReader(Motor* leftMotorPtr, Motor* rightMotorPtr, Led* greenLedPtr, Led* redLedPtr);
+        FileReader( Motor* leftMotorPtr, Motor* rightMotorPtr, 
+                    Led* greenLedPtr, Led* redLedPtr, 
+                    MatrixLedThreeByThree* threeByThreeLedPortPtr, 
+                    MatrixLedFourByFour* fourByFourMatrixPtr);
 
-        void readFile(volatile uint8_t& FourByFourLedPort, volatile uint8_t& ThreeByThreeLedPort);
+        void readFile();
     private:
         Uart uart_;
         Motor* leftMotorPtr_;
         Motor* rightMotorPtr_;
         Led* greenLedPtr_;
         Led* redLedPtr_;
+        MatrixLedThreeByThree* threeByThreeMatrixPtr_;
+        MatrixLedFourByFour* fourByFourMatrixPtr_;
                        
-        static const int SIZE = 4;
+        static const int MNEMONIC_SIZE = 5;
+        enum Mnemonics: uint8_t {   DBT = 0x01,
+                                    ATT = 0x02,
+                                    DAL = 0x44,
+                                    DET = 0x45,
+                                    MON = 0x18,
+                                    MOF = 0x19,
+                                    MAR1 = 0x60,
+                                    MAR2 = 0x61,
+                                    MAV = 0x62,
+                                    MRE = 0x63,
+                                    TRD = 0x64,
+                                    TRG = 0x65,
+                                    DBC = 0xc0,
+                                    FBC = 0xc1,
+                                    FIN = 0xff};
         
-        static const uint8_t TURNING_PWM = 128;
-        static const uint8_t DBT = 0x01;
-        static const uint8_t ATT = 0x02;
-        static const uint8_t DAL = 0x44;
-        static const uint8_t DET = 0x45;
-        static const uint8_t MON = 0x18;
-        static const uint8_t MOF = 0x19;
-        static const uint8_t MAR1 = 0x60;
-        static const uint8_t MAR2 = 0x61;
-        static const uint8_t MAV = 0x62;
-        static const uint8_t MRE = 0x63;
-        static const uint8_t TRD = 0x64;
-        static const uint8_t TRG = 0x65;
-        static const uint8_t DBC = 0xc0;
-        static const uint8_t FBC = 0xc1;
-        static const uint8_t FIN = 0xff;
 };
 #endif

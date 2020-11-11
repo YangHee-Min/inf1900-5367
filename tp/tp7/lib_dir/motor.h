@@ -18,8 +18,9 @@
 class Motor {
 public:
     static const uint8_t OFF = 0;
-    static const uint8_t BACKWARD = 0;
-    static const uint8_t FORWARD = 1;
+    static const uint8_t TURNING_PWM = 128;
+    enum DirectionValue: uint8_t {  BACKWARD, 
+                                    FORWARD};
 
     Motor(volatile uint16_t* ocrnxPtr, uint8_t directionPin);
     void adjustPWM(uint16_t pwm8Bit, uint8_t directionValue);

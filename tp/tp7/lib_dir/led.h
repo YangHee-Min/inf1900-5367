@@ -17,6 +17,7 @@
 class Led {
     public:
         static const uint8_t OFF = 0x00;
+        static const int S_TO_MS_FACTOR = 1000;
         Led(uint8_t pinSource, uint8_t pinGround, volatile uint8_t& port);
         void turnOn();
         void turnOff(); 
