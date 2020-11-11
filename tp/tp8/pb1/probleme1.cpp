@@ -8,7 +8,7 @@
 *               according to the instructions given for TP2 
 *               problem 1 of the class INF1900. 
 * Materials: 2 push buttons, 1 red LED, 1 green LED and 
-*            1 Atmega324pa 
+*            1 Atmega324a 
 _______________________________________________________
 +--------------+----+----+--------------+--------+
 | ETAT PRESENT | D3 | D2 | ETAT SUIVANT | SORTIE |
