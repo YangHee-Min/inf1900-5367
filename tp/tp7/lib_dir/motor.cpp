@@ -3,11 +3,14 @@
 * Authors: Adam Halim, Chun Yang Li, Hee-Min Yang, Jean Janssen
 * Date: November 3 2020
 * Updated: November 11 2020
-* Description: Definition of methods related to LEDs.
+* Description: Definition of methods related to Motor.
 ***********************************/
 
 #include "motor.h"
 
+//! Parameters constructor that also initializes an 8 bits timer
+//! \param ocrnxPtr     Pointer to PWM timer value
+//! \param directionPin Pin which manipulates the direction
 Motor::Motor(volatile uint16_t* ocrnxPtr, uint8_t directionPin): ocrnxPtr_(ocrnxPtr), directionPin_(directionPin){
     // If instantiating multiple motor classes, we won't instantiate 
     // registers more than once.
@@ -23,8 +26,8 @@ Motor::Motor(volatile uint16_t* ocrnxPtr, uint8_t directionPin): ocrnxPtr_(ocrnx
 }
 
 //! Function that changes timer value
-//! \param pwm8Bit   PWM percentage wanted on 8 bits (over 255)
-//! \param ocrnx_     PWM generating pin (oc1a or oc1b)
+//! \param pwm8Bit  PWM percentage wanted on 8 bits (over 255)
+//! \param ocrnx_   PWM timer value
 void Motor::adjustPWM(uint16_t pwm8Bit, uint8_t directionValue){
     PORTD = (directionValue == 0) ? PORTD & ~(1 << directionPin_): PORTD | (1 << directionPin_);
     *ocrnxPtr_ = pwm8Bit;
@@ -58,9 +61,9 @@ void Motor::turnMotorPWM(double PWM, double frequency, uint8_t enablePin, double
 }
 
 //! Function that converts the percentage into a PWM
-//! \param percentage   percentage wanted for uptime of the PWM wave
-//! \return    returns the integer related to max count of the 8 
-//!            bit timer and the specified percentage.
+//! \param percentage   Percentage wanted for uptime of the PWM wave
+//! \return             Returns the integer related to max count of the 8 
+//!                     bit timer and the specified percentage.
 uint8_t Motor::convertPercentInPWM8BitTimer(uint16_t percentage){
     uint8_t pwm = 0;
     switch(percentage){
@@ -83,9 +86,8 @@ uint8_t Motor::convertPercentInPWM8BitTimer(uint16_t percentage){
     return pwm;
 }
 
-
 //! Function that delays the motor by the specified number of seconds. 
-//! \param seconds   number of seconds we want to delay the motor by
+//! \param seconds   Number of seconds we want to delay the motor by
 void Motor::delaySeconds(long unsigned int seconds){
     long unsigned int cyclesPerSecond = F_CPU / PRESCALER;
     for(long unsigned int currentSecond = 0; currentSecond < seconds; currentSecond++){

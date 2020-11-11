@@ -1,3 +1,11 @@
+/**********************************
+* File: fileReader.cpp
+* Authors: Adam Halim, Chun Yang Li, Hee-Min Yang, Jean Janssen
+* Date: November 11 2020
+* Updated: November 11 2020
+* Description: Definition of methods related FileReader.
+***********************************/
+
 #ifndef FILEREADER_H
 #define FILEREADER_H
 
@@ -9,14 +17,18 @@
 
 class FileReader{
     public:
+        // Constructor
         FileReader( Motor* leftMotorPtr, Motor* rightMotorPtr, 
                     Led* greenLedPtr, Led* redLedPtr, 
-                    MatrixLedThreeByThree* threeByThreeLedPortPtr, 
+                    MatrixLedThreeByThree* threeByThreeMatrixPtr, 
                     MatrixLedFourByFour* fourByFourMatrixPtr);
 
+        // Functions
         void readFileFromEeprom();
         void sendFileToEeprom();
+
     private:
+        // Attributes
         Uart uart_;
         Motor* leftMotorPtr_;
         Motor* rightMotorPtr_;
@@ -24,7 +36,8 @@ class FileReader{
         Led* redLedPtr_;
         MatrixLedThreeByThree* threeByThreeMatrixPtr_;
         MatrixLedFourByFour* fourByFourMatrixPtr_;
-                       
+
+        // Constants
         static const int MNEMONIC_SIZE = 5;
         enum Mnemonics: uint8_t {   DBT = 0x01,
                                     ATT = 0x02,
@@ -41,6 +54,5 @@ class FileReader{
                                     DBC = 0xc0,
                                     FBC = 0xc1,
                                     FIN = 0xff};
-        
 };
 #endif

@@ -1,17 +1,33 @@
+/**********************************
+* File: fileReader.cpp
+* Authors: Adam Halim, Chun Yang Li, Hee-Min Yang, Jean Janssen
+* Date: November 11 2020
+* Updated: November 11 2020
+* Description: Implementation of methods related FileReader.
+***********************************/
+
 #include "./fileReader.h"
 
+//! Constructor of class FileReader
+//! \param leftMotorPtr             Pointer to left motor
+//! \param rightMotorPtr            Pointer to right motor
+//! \param greenLedPtr              Pointer to the green LED
+//! \param redLedPtr                Pointer to the red LED
+//! \param threeByThreeMatrixPtr    Pointer to the 3D matrix
+//! \param fourByFourMatrixPtr      Pointer to the 4D matrix
 FileReader::FileReader( Motor* leftMotorPtr, Motor* rightMotorPtr, 
                         Led* greenLedPtr, Led* redLedPtr, 
-                        MatrixLedThreeByThree* threeByThreeLedPortPtr, 
+                        MatrixLedThreeByThree* threeByThreeMatrixPtr, 
                         MatrixLedFourByFour* fourByFourMatrixPtr):
     leftMotorPtr_(leftMotorPtr),
     rightMotorPtr_(rightMotorPtr),
     greenLedPtr_(greenLedPtr),
     redLedPtr_(redLedPtr),
-    threeByThreeMatrixPtr_(threeByThreeLedPortPtr),
+    threeByThreeMatrixPtr_(threeByThreeMatrixPtr),
     fourByFourMatrixPtr_(fourByFourMatrixPtr){
 }
 
+//! Function that reads the eeprom and executes the instructions.
 void FileReader::readFileFromEeprom(){
     int duration_ms = 1500;
 
@@ -145,6 +161,7 @@ void FileReader::readFileFromEeprom(){
     }
 }
 
+//! Function that sends file from USART to the eeprom.
 void FileReader::sendFileToEeprom(){
     uart_.print("Starting transmission from USART to EEPROM...\n", 46);
     for(;;){
