@@ -1,3 +1,9 @@
+dal 10 ;
+att 20 ;
+dal 155 ;
+det ;
+mon 16 ;
+att 15 ;
 dbt ;
 dal 10 ;
 att 20 ;
@@ -20,7 +26,7 @@ att 20 ;
 fbc ;
 fin ;
 dbt;
-al 10 ;
+dal 10 ;
 att 20 ;
 dal 155 ;
 det ;
