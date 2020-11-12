@@ -12,7 +12,11 @@ uint16_t Uart::currentEepromAddress_ = 0;
 
 //! Default constructor for the UART class. Uses the initialisation function.
 Uart::Uart(){
+    // Only define registers once for all Uart instances.
+    #ifndef UART
+    #define UART
     initialisation();
+    #endif
 }
 
 //! Function that transmits data through the UDR0 register.
@@ -31,8 +35,9 @@ void Uart::print(const char message[], const unsigned int size){
     }
 }
 
-//! Function that sends one byte of instruction from the RS232 to eeprom
-//! \return Returns the byte of instruction
+//! Function that sends one byte of instruction/operand 
+//! from the RS232 to eeprom.
+//! \return Returns the byte of instruction/operand
 uint8_t Uart::sendUsartToEeprom(){
     uint8_t byteToSend = receiveRS232Byte();
     saveByteEeprom(currentEepromAddress_, byteToSend);
@@ -65,9 +70,6 @@ uint8_t Uart::receiveRS232Byte(){
 //! by UART. The symbol rate (modulation rate) is set to 2400 bauds. Uses 8 bits, 1 stop bit
 //! and no parity bit.
 void Uart::initialisation(){
-    // Only define registers once for all Uart instances.
-    #ifndef UART
-    #define UART
     // 2400 bauds.
     UBRR0H = 0;
     UBRR0L = 0xCF;
@@ -75,5 +77,4 @@ void Uart::initialisation(){
     UCSR0B = (1 << RXEN0) | (1 << TXEN0);
     // Format of frames : 8 bits, 1 stop bit, none parity
     UCSR0C = (1 << USBS0) | (3 << UCSZ00);
-    #endif
 }

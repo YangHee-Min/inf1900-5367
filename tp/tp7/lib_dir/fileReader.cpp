@@ -169,10 +169,12 @@ void FileReader::sendFileToEeprom(){
     uart_.print("Starting transmission from USART to EEPROM...\n", 46);
     uart_.print("Please send the eeprom data by RS232\n", 38);
     for(;;){
+        // Send instruction to eeprom
         uint8_t currentUsartByte = uart_.sendUsartToEeprom();
         if(currentUsartByte == FIN)
             break;
 
+        // Send operand to eeprom
         uart_.sendUsartToEeprom();
     }
     uart_.print("Sent all to eeprom. Now starting program...\n", 45);

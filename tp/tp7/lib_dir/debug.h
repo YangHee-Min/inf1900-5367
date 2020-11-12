@@ -9,6 +9,8 @@
 #include "string.h"
 #include "./uart.h"
 
+#ifndef DEBUG_H
+#define DEBUG_H
 class Debug{
 public:
     // Functions
@@ -18,3 +20,4 @@ private:
     // Attributes
     Uart uart_;
 };
+#endif
