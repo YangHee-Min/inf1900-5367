@@ -55,8 +55,11 @@ void FileReader::readFileFromEeprom(){
         if(!programHasStarted)
             continue;
 
+        //! For each 16 bits of instructions that we read,
+        //! we execute the case depending on the value of 
+        //! the operand (8 most significant bits).
+        //! Operand might be used depending on the case.
         switch(instruction){
-
             case ATT:
                 uart_.print("att\n", MNEMONIC_SIZE);
                 att_delay_ms = 25 * operand;
