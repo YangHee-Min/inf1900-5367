@@ -1,0 +1,35 @@
+# Nom du microcontroleur cible
+# (exemple: 'at90s8515')
+MCU=atmega324pa
+
+# Nom du compilateur
+CC=avr-gcc
+
+# Nom de base de la librairie
+LIBNAME=lib
+
+# Nom du repertoire contenant la librairie
+LIBFOLDER=tp/tp7/lib_dir
+
+# Nom du fichier source de la librairie
+SRC=$(wildcard *.cpp)
+
+# Pour chaque objet .cpp produit, produire un objet .o
+OBJ=$(SRC:.cpp=.o)
+
+# Liste des fichiers headers
+HEADERS= $(SRC:.cpp=.h)
+
+# Nom du fichier de la librairie
+LIB=lib$(LIBNAME).a
+
+CFLAGS=-I. -I/usr/include/simavr  -MMD $(INC) -g -mmcu=$(MCU) -O$(OPTLEVEL) \
+	-fpack-struct -fshort-enums             \
+	-funsigned-bitfields -funsigned-char    \
+	-Wall
+
+# Flags pour le compilateur en C++
+CXXFLAGS=-fno-exceptions
+
+#pour supprimer les fichiers lorsque l'on appel make clean
+REMOVE= rm -f

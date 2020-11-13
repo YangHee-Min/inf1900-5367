@@ -4,3 +4,9 @@
 *.elf.map
 *.d
 *.elf
+*.a
+*_backup.simu
+*.data
+*TEST.txt
+progeeprom
+sendBinToSimulide
