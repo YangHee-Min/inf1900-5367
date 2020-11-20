@@ -19,7 +19,7 @@ Code:
 Le rapport:
 – Explications cohérentes par rapport au code retenu
   pour former la librairie                                   (1.5/2)
-– Explications cohérentes par rapport aux Makefiles modifiés (0/2)
+– Explications cohérentes par rapport aux Makefiles modifiés (1.5/2)
 – Explications claires avec un bon niveau de détails         (2/2)
 – Bon français                                               (1/1)
 
@@ -27,7 +27,7 @@ Généralités:
 – Bonne soumission de l'ensemble du code (compilation sans
   erreurs, …) et du rapport selon le format demandé          (2/3)
 
-Total: 14.5/20
+Total: 16/20
 
 Commentaires du correcteur:
 
