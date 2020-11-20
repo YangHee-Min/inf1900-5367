@@ -6,7 +6,6 @@
 * Description: Definition of methods related to matrixLed.
 ***********************************/
 
-
 #ifndef MATRIXLED_H
 #define MATRIXLED_H
 

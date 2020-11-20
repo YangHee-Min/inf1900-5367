@@ -1,3 +1,9 @@
+dal 10 ;
+att 20 ;
+dal 155 ;
+det ;
+mon 16 ;
+att 15 ;
 dbt ;
 dal 10 ;
 att 20 ;
@@ -19,5 +25,8 @@ trg ;
 att 20 ;
 fbc ;
 fin ;
-
-
+dbt;
+dal 10 ;
+att 20 ;
+dal 155 ;
+det ;

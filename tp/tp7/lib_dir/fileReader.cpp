@@ -55,8 +55,11 @@ void FileReader::readFileFromEeprom(){
         if(!programHasStarted)
             continue;
 
+        //! For each 16 bits of instructions that we read,
+        //! we execute the case depending on the value of 
+        //! the operand (8 most significant bits).
+        //! Operand might be used depending on the case.
         switch(instruction){
-
             case ATT:
                 uart_.print("att\n", MNEMONIC_SIZE);
                 att_delay_ms = 25 * operand;
@@ -166,10 +169,12 @@ void FileReader::sendFileToEeprom(){
     uart_.print("Starting transmission from USART to EEPROM...\n", 46);
     uart_.print("Please send the eeprom data by RS232\n", 38);
     for(;;){
+        // Send instruction to eeprom
         uint8_t currentUsartByte = uart_.sendUsartToEeprom();
         if(currentUsartByte == FIN)
             break;
 
+        // Send operand to eeprom
         uart_.sendUsartToEeprom();
     }
     uart_.print("Sent all to eeprom. Now starting program...\n", 45);

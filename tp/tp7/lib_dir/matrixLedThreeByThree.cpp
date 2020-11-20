@@ -32,10 +32,10 @@ void MatrixLedThreeByThree::turnRight(){
 void MatrixLedThreeByThree::changeLedDirection(int turnDirection){ 
 
     currentDirection_ += turnDirection;
-    if(currentDirection_ == -1)
+    if(currentDirection_ == NORTH + LEFT)
         currentDirection_ = WEST;
     
-    if(currentDirection_ == 4)
+    if(currentDirection_ == WEST + RIGHT)
         currentDirection_ = NORTH;
     
     switch(currentDirection_){
