@@ -1,14 +1,14 @@
 /*
-* Fichier: probleme2.cpp
-* Auteurs : Hee-Min Yang   Adam Halim
+* File: probleme2.cpp
+* Authors : Hee-Min Yang   Adam Halim
 * Date : 21 septembre 2020
-* Mis à jour : 15 septembre 2020
-* Description : Comportement du microprocesseur 
-                selon le tableau à états décrit ci-dessous
-                selon les consignes du TP2 problème 1 du cours 
-                INF1900.
-* Matériaux: 2 boutons-poussoirs, 1 DEL rouge, 1 DEL vert et 
-             un microcontroleur atmega324pa.
+* Updated : 15 septembre 2020
+* Description : Behaviour of the microprocessor follows the 
+*               state diagram specified in the table below 
+*               according to the instructions given for TP2 
+*               problem 1 of the class INF1900. 
+* Materials: 2 push buttons, 1 red LED, 1 green LED and 
+*            1 Atmega324a 
 _______________________________________________________
 +--------------+----+----+--------------+--------+
 | ETAT PRESENT | D3 | D2 | ETAT SUIVANT | SORTIE |

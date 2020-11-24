@@ -5,3 +5,7 @@
 *.d
 *.elf
 *.a
+*_backup.simu
+*.data
+progeeprom
+sendBinToSimulide
