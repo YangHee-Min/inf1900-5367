@@ -26,9 +26,6 @@ PROJECTNAME=
 # un espace. exemple: 'tp1.c tp2.cpp':
 PRJSRC= 
 
-# Inclusions additionnels (ex: -I/path/to/mydir)
-INC=
-
 # Librairies a lier (ex: -lmylib)
 LIBS=$(LIBNAME)
 

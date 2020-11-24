@@ -2,28 +2,37 @@
 #ifndef KEYBOARD_H
 #define KEYBOARD_H
 
+#ifndef F_CPU
+#define F_CPU 8000000UL
+#endif
+
 #include <avr/io.h> 
 #include <util/delay.h>
+#include "debug.h"
 
 class Keyboard{
     public:
     Keyboard(volatile uint8_t* portPtr, 
+                volatile uint8_t* pinPtr,
                 uint8_t demuxS1, 
                 uint8_t demuxS0, 
                 uint8_t muxS1, 
-                uint8_t muxS0);
+                uint8_t muxS0,
+                uint8_t inputPin);
     
     char readKey();
     bool buttonIsPressed(uint8_t button, volatile uint8_t& pinx);
     private:
         int currentScoutedKeyValue_;
-        uint8_t demuxS0_;
+        volatile uint8_t* portPtr_;
+        volatile uint8_t* pinPtr_;
         uint8_t demuxS1_;
-        uint8_t muxS0_;
+        uint8_t demuxS0_;
         uint8_t muxS1_;
+        uint8_t muxS0_;
         uint8_t inputPin_;
-        volatile uint8_t* portPTR_;
-        static const int PAST_END_OF_ENUM = 16;
+        static const uint8_t PAST_END_OF_ENUM = 16;
+        static const uint8_t INPUT_DELAY = 1;
         enum KeyboardValue: uint8_t{KEY_0 = 0b0000,
                                     KEY_4 = 0b0001, 
                                     KEY_8 = 0b0010,
@@ -40,4 +49,5 @@ class Keyboard{
                                     KEY_7 = 0b1101,
                                     KEY_B = 0b1110,
                                     KEY_F = 0b1111};
-}
+};
+#endif

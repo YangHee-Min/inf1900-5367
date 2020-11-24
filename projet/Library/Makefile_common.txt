@@ -9,7 +9,7 @@ CC=avr-gcc
 LIBNAME=lib
 
 # Nom du repertoire contenant la librairie
-LIBFOLDER=tp/tp7/lib_dir
+LIBFOLDER=/Library/lib_dir
 
 # Nom du fichier source de la librairie
 SRC=$(wildcard *.cpp)
@@ -23,7 +23,10 @@ HEADERS= $(SRC:.cpp=.h)
 # Nom du fichier de la librairie
 LIB=lib$(LIBNAME).a
 
-CFLAGS=-I. -I/usr/include/simavr  -MMD $(INC) -g -mmcu=$(MCU) -O$(OPTLEVEL) \
+# Inclusions additionnels (ex: -I/path/to/mydir)
+INC=-I/../..$(LIBFOLDER)
+
+CFLAGS=-I. -I/usr/include/simavr -MMD $(INC) -g -mmcu=$(MCU) -O$(OPTLEVEL) \
 	-fpack-struct -fshort-enums             \
 	-funsigned-bitfields -funsigned-char    \
 	-Wall
