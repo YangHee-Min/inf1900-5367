@@ -2,8 +2,8 @@
 
 void LEDBar::displayState()
 {
-PORTC3 = 1; /* Memory mode on */
-PORTC4 = 0; /* Display mode on */
+PORTC |= (1 << PORTC3); /* Memory mode on */
+PORTC |= (1 << PORTC4); /* Display mode on */
 uint8_t currentBit;
 
 for(uint8_t i = 0; i < 32; i++)
@@ -13,19 +13,19 @@ currentBit &= (1 << i);
 
 if(currentBit == (1 << i))
     {
-    PORTC2 = 1; /* DS */
+    PORTC |= (1 << PORTC2); /* DS */
     }
 else
     {
-    PORTC2 = 0; /* DS */
+    PORTC &= ~(1 << PORTC2); /* DS */
     }
 
-PORTC0 = currentBit;
-PORTC0 = 0; 
+PORTC |= (1 << PORTC0);
+PORTC &= ~(1 << PORTC0); 
 
 };
 
-PORTC1 = 1; /* LATCH */
+PORTC |= (1 <<PORTC1); /* LATCH */
 
 }
 
