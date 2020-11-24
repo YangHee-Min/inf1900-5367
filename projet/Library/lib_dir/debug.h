@@ -15,7 +15,7 @@ class Debug{
 public:
     // Functions
     void DEBUG_PRINT(const char debugMessage[], const unsigned int size);
-
+    void transmission(uint8_t data);
 private:
     // Attributes
     Uart uart_;

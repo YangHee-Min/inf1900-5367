@@ -14,3 +14,7 @@
 void Debug::DEBUG_PRINT(const char debugMessage[], const unsigned int size){
     uart_.print(debugMessage, size);
 }
+
+void Debug::transmission(uint8_t data){
+    uart_.transmission(data);
+}
