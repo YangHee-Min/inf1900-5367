@@ -2,8 +2,6 @@
 
 void LEDBar::displayState()
 {
-PORTC |= (1 << PORTC3); /* Memory mode on */
-PORTC |= (1 << PORTC4); /* Display mode on */
 uint8_t currentBit;
 
 for(uint8_t i = 0; i < 32; i++)
@@ -31,7 +29,8 @@ PORTC |= (1 <<PORTC1); /* LATCH */
 
 void LEDBar::openDoor(uint8_t doorType)
 {
-
+PORTC |= (1 << PORTC3); /* Memory mode on */
+PORTC |= (1 << PORTC4); /* Display mode on */
 for(uint8_t i = 0; i <= 7; i++)
 {
     LEDState_ &= ~(1 << (8*doorType+i));
@@ -42,7 +41,8 @@ for(uint8_t i = 0; i <= 7; i++)
 
 void LEDBar::closeDoor(uint8_t doorType)
 {
-
+PORTC |= (1 << PORTC3); /* Memory mode on */
+PORTC |= (1 << PORTC4); /* Display mode on */
 for(uint8_t i = 7; i <= 0; i--)
 {
     LEDState_ |= (1 << (8*doorType+i));

@@ -1,9 +1,12 @@
 #include "../../Library/lib_dir/LEDBar.h"
 
-int main(){
+int main()
+{
 DDRC = 0xff;
-PORTC = 1 << PORTC1;
-//LEDBar bar = LEDBar();
-//bar.closeDoor(0);
+DDRD = 0xff;
+
+//PORTC |= (1 << PORTC0);
+LEDBar bar = LEDBar();
+bar.closeDoor(0);
 
 }
