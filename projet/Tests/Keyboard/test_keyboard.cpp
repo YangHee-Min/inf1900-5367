@@ -1,5 +1,5 @@
-#include "../../Library/lib_dir/keyboard.h"
-#include "../../Library/lib_dir/uart.h"
+#include "keyboard.h"
+#include "uart.h"
 
 int main(){
     uint8_t demuxS1 = PORTA3;
@@ -15,7 +15,7 @@ int main(){
 
     char message[7] = "start\n";
     uart.print(message, 7);
-    for(;;){//
+    for(;;){
         int readValue = keyboard.readKey();
         uart.transmission(readValue);
         while(PINA & (1 << PORTA4)){}

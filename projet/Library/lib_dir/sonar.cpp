@@ -1,31 +1,71 @@
 #include "sonar.h"
 
-Sonar::Sonar(volatile uint8_t* portPtr, uint8_t trigPin, uint8_t echoPin)
-    :portPtr_(portPtr)
-    ,trigPin_(trigPin)
-    ,echoPin_(echoPin)
+volatile bool Sonar::detectedObject_ = false;
+volatile uint16_t Sonar::lastDistance_ = 0;
+
+Sonar::Sonar()
+    :portPtr_(&PORTD)
+    ,trigPin_(PORTD5)
+    ,echoPin_(INT0)
 {
     initialisationISR();
+    initialisationTrigPwm();
+    debug_ = Uart();
 }
 
-void Sonar::initialisation(){
-    // cli est une routine qui bloque toutes les interruptions.
-    // Il serait bien mauvais d'être interrompu alors que
-    // le microcontroleur n'est pas prêt...
-    cli ();
-    // configurer et choisir les ports pour les entrées
-    // et les sorties. DDRx... Initialisez bien vos variables
-    DDRA = 0xff; // PORT A est en mode sortie
-    DDRD = 0x00; // PORT D est en mode entreePortD
+ISR ( INT0_vect ) {
+    uint32_t counter = 0;
+    while(PIND & (1 << PIND2)){
+        counter++;
+    }
+    Sonar::lastDistance_ = counter;
+    Sonar::detectedObject_ = true;
+}
 
-    // cette procédure ajuste le registre EIMSK
-    // de l’ATmega324PA pour permettre les interruptions externes
+void Sonar::initialisationISR(){
+    // Prevent any other isr
+    cli ();
+    
+    // PORTD2 as input pin
+    DDRD &= ~(1 << PORTD2); 
+
+    // PORTD1 as ouput pin
+    DDRD |= (1 << PORTD5);
+
+    // activate INT0 pin
     EIMSK |= (1 << INT0);
-    // il faut sensibiliser les interruptions externes aux
-    // changements de niveau du bouton-poussoir
-    // en ajustant le registre EICRA
     EICRA |= (1 << ISC00) | (1 << ISC01);
     // sei permet de recevoir à nouveau des interruptions.
     sei ();
+}
 
+void Sonar::initialisationTrigPwm(){
+    // Set timer to 0
+    #ifndef TIMER_TCNT
+    #define TIMER_TCNT
+    TCNT1 = 0;
+
+    // Clock division by 1024 with 10 bit timer
+    // and clear on upcount match / set on downcount
+    // match
+
+    // Clock clear on upcount match / set on downcount
+    // match. - 10 bit timer
+    TCCR1A |= (1 << COM1A1);
+    TCCR1A |= (1 << WGM10) | (1 << WGM11) | (1 << WGM12);
+    TCCR1B |= (1 << CS12) | (1 << CS10);
+    TCCR1C = 0;
+    #endif
+
+    OCR1A = 1;
+}
+
+int Sonar::obstaclesDetection(){
+    while(!detectedObject_){
+    }
+    cli();
+    detectedObject_ = false;
+    sei();
+    return lastDistance_;
+    
 }

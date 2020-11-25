@@ -20,7 +20,8 @@ Motor::Motor(volatile uint16_t* ocrnxPtr, uint8_t directionPin): ocrnxPtr_(ocrnx
     TCNT1 = 0;
 
     // Clock division by 8 - Implies a fixed PWM frequency
-    TCCR1A |= (1 << COM1A1) | (1 << COM1B1) | (1 << WGM10);    TCCR1B |= (1 << CS11);
+    TCCR1A |= (1 << COM1A1) | (1 << COM1B1) | (1 << WGM10);    
+    TCCR1B |= (1 << CS11);
     TCCR1C = 0;
     #endif
 }
