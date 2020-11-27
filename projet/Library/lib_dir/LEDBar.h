@@ -1,24 +1,49 @@
+#ifndef LED_BAR_H
+#define LED_BAR_H
+
+#ifndef F_CPU
+#define F_CPU 8000000UL
+#endif
+
 #include <avr/io.h> 
 #include <util/delay.h>
+#include "debug.h"
+
 class LEDBar {
-public:
 
-LEDBar(){LEDState_ = 0;};
+    public:
 
-void openDoor(uint8_t doorType);
-void closeDoor(uint8_t doorType);
-void displayState();
+        LEDBar(uint8_t SHC,
+                uint8_t STC, 
+                uint8_t DS, 
+                uint8_t MR, 
+                uint8_t OE, 
+                volatile uint8_t* portPtr);
 
-private:
+        void openDoor(uint8_t doorType);
+        void closeDoor(uint8_t doorType);
+        void displayState();
+        uint32_t LEDState_;
+    private:
+        
+        uint8_t SHC_;
+        uint8_t STC_;
+        uint8_t DS_;
+        uint8_t MR_;
+        uint8_t OE_;
+        volatile uint8_t* portPtr_;
+        
+        static const uint8_t MAX_LED_BAR_POSITION = 8;
+        static const uint8_t MIN_BIT_POSITION = 0;
+        static const uint8_t MAX_BIT_POSITION = 32;
 
-uint32_t LEDState_;
-
-enum Doors
-    {
-    doorA,
-    doorB,
-    doorC,
-    doorD,
-    };
+        enum Doors
+        {
+            doorA,
+            doorB,
+            doorC,
+            doorD,
+        };
 
 };
+#endif
