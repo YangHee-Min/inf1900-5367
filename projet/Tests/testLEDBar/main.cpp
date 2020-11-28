@@ -9,11 +9,17 @@ int main(){
     debug.DEBUG_PRINT("start", 6);
     // bar.openDoor(0);
     // bar.closeDoor(0);
-    bar.LEDState_ = 0xFFFFF;
+    /*bar.LEDState_ = 0xFFFFFFFF;
     bar.displayState();
-    debug.DEBUG_PRINT("end", 4);
+    debug.DEBUG_PRINT("end", 4);*/
     
-    while(true){}
+    for(int i = 0; i < 4; i++){
+        bar.closeDoor(i);
+        debug.DEBUG_PRINT("close A\n", 9);
+
+        bar.openDoor(i);
+        debug.DEBUG_PRINT("open A\n", 8);
+    }
         // bar.closeDoor(0);
         // debug.DEBUG_PRINT("close A\n", 9);
 
@@ -39,6 +45,6 @@ int main(){
         // bar.openDoor(3);
         // debug.DEBUG_PRINT("open", 5);
 
-//3
+//5
 
 }

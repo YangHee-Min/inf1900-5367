@@ -1,3 +1,11 @@
+/**********************************
+* File: LEDBar.h
+* Authors: Adam Halim, Chun Yang Li, Hee-Min Yang, Jean Janssen
+* Date: November 23 2020
+* Updated: November 27 2020
+* Description: Definition of methods related to LEDBARs.
+***********************************/
+
 #ifndef LED_BAR_H
 #define LED_BAR_H
 
