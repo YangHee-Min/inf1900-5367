@@ -9,7 +9,7 @@ Sonar::Sonar()
     ,echoPin_(INT0)
 {
     initialisationISR();
-    initialisationTrigPwm();
+    //initialisationTrigPwm();
     debug_ = Uart();
 }
 
@@ -22,42 +22,38 @@ ISR ( INT0_vect ) {
     Sonar::detectedObject_ = true;
 }
 
+ISR ( TIMER1_COMPB_vect ) {
+    PORTD |= (1 << PORTD5);
+    PORTD &= ~(1 << PORTD5);
+    OCR1B += Sonar::TRIG_FREQUENCY;
+    if(OCR1B > OCR1A)
+        OCR1B = Sonar::TRIG_FREQUENCY;
+}
+
 void Sonar::initialisationISR(){
     // Prevent any other isr
     cli ();
-    
+    #ifndef TIMER_ISR
+    #define TIMER_ISR
+    // mode CTC of timer 1 with 1024 prescaler
+    TCNT1 = 0;
+    TCCR1A = 0;
+    TCCR1B |= (1 << CS10) | (1 << CS12) | (1 << WGM12);
+    TCCR1C = 0;
+    TIMSK1 |= (1 << OCIE1B);
+    #endif
+
     // PORTD2 as input pin
-    DDRD &= ~(1 << PORTD2); 
+    DDRD &= ~(1 << echoPin_); 
 
     // PORTD1 as ouput pin
-    DDRD |= (1 << PORTD5);
+    DDRD |= (1 << trigPin_);
 
     // activate INT0 pin
-    EIMSK |= (1 << INT0);
+    EIMSK |= (1 << echoPin_);
     EICRA |= (1 << ISC00) | (1 << ISC01);
     // sei permet de recevoir à nouveau des interruptions.
     sei ();
-}
-
-void Sonar::initialisationTrigPwm(){
-    // Set timer to 0
-    #ifndef TIMER_TCNT
-    #define TIMER_TCNT
-    TCNT1 = 0;
-
-    // Clock division by 1024 with 10 bit timer
-    // and clear on upcount match / set on downcount
-    // match
-
-    // Clock clear on upcount match / set on downcount
-    // match. - 10 bit timer
-    TCCR1A |= (1 << COM1A1);
-    TCCR1A |= (1 << WGM10) | (1 << WGM11) | (1 << WGM12);
-    TCCR1B |= (1 << CS12) | (1 << CS10);
-    TCCR1C = 0;
-    #endif
-
-    OCR1A = 1;
 }
 
 int Sonar::obstaclesDetection(){

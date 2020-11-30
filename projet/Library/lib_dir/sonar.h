@@ -15,14 +15,14 @@ class Sonar{
         Sonar();
 
         void initialisationISR();
-        void initialisationTrigPwm();
         int obstaclesDetection();
 
         static volatile bool detectedObject_;
         static volatile uint16_t lastDistance_;
 
         static const int CONVERT_US = 8;
-        static const int CONVERT_CM = 58; 
+        static const int CONVERT_CM = 58;
+        static const uint16_t TRIG_FREQUENCY = 1172; 
     private:
         volatile uint8_t* portPtr_;
         uint8_t trigPin_;
