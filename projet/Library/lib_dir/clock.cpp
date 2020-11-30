@@ -3,6 +3,8 @@
 volatile uint16_t Clock::currentTime_ = 0;
 volatile uint8_t* Clock::portPtrGlobal_ = &PORTD;
 uint8_t Clock::pwmPinGlobal_ = PORTD4;
+can Clock::clockCan_;
+uint8_t Clock::voltPin_ = PORTA0;
 
 Clock::Clock(volatile uint8_t* portPtr, 
             uint8_t pwmPin, 
@@ -11,13 +13,15 @@ Clock::Clock(volatile uint8_t* portPtr,
             :portPtr_(portPtr)
             ,pwmPin_(pwmPin)
             ,resetPin_(resetPin)
-            ,voltPin_(voltPin)
 {
     if(*portPtr_ != PORTD)
         portPtrGlobal_ = portPtr_;
 
     if(pwmPin_ != PORTD4)
         pwmPinGlobal_ = pwmPin_;
+
+    if(voltPin_ != PORTA0)
+        voltPin_ = voltPin;
 }
 
 void Clock::setTimerFrequency ( uint16_t ticks ) {
@@ -52,6 +56,13 @@ void Clock::resetTime(){
     *portPtr_ &= ~(1 << resetPin_);
 }
 
+void Clock::updatePwmPin(){
+    uint16_t tenBitVoltValue = Clock::clockCan_.lecture(PORTA0);
+    double VOLT_TO_TICK_FACTOR = -9.935;
+    double newOcr1A = VOLT_TO_TICK_FACTOR * tenBitVoltValue + TICK_PERIOD_1_S;
+    OCR1A = (uint16_t) newOcr1A;
+}
+
 uint16_t Clock::getTimeInTicks(char time[5]){
     const uint8_t TIME_SIZE = 5;
     const uint8_t DECADE_SCALE_FACTOR = 10;
@@ -73,6 +84,7 @@ uint8_t Clock::getDigitFromChar(char digit){
 }
 
 ISR ( TIMER1_COMPA_vect ) {
+    Clock::updatePwmPin();
     *Clock::portPtrGlobal_ |= (1 << Clock::pwmPinGlobal_);
     *Clock::portPtrGlobal_ &= ~(1 << Clock::pwmPinGlobal_);
     Clock::currentTime_ +=1;
