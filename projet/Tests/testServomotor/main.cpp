@@ -6,14 +6,14 @@ int main(){
     //servomotor.transmissionServomotorPWM(180);
     
    for(double i = 0; i <= 180; i+=45){
-    servomotor.transmissionServomotorPWM(i);
+    servomotor.changeAngle(i);
     _delay_ms(10000);
     }
     for(double i = 180; i >= 0; i-=45){
-    servomotor.transmissionServomotorPWM(i);
+    servomotor.changeAngle(i);
     _delay_ms(10000);
     }
-   servomotor.transmissionServomotorPWM(0);
+   servomotor.changeAngle(0);
   /*
     _delay_ms(500);
     double angle = 0;

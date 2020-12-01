@@ -71,7 +71,7 @@ uint16_t Clock::getTimeInTicks(char time[5]){
 
     uint8_t timeInNumber[TIME_SIZE];
     for(int currentDigit = 0; currentDigit < TIME_SIZE - 1; currentDigit++){
-        timeInNumber[currentDigit] = getDigitFromChar(time[currentDigit]);
+        timeInNumber[currentDigit] = Time::getDigitFromChar(time[currentDigit]);
     }
     uint16_t returnValue = (timeInNumber[0] * DECADE_SCALE_FACTOR  + timeInNumber[1]) * TIME_SCALE_FACTOR + timeInNumber[2] * DECADE_SCALE_FACTOR + timeInNumber[3];
     if(returnValue > MAX_TIME)
@@ -80,9 +80,6 @@ uint16_t Clock::getTimeInTicks(char time[5]){
     return returnValue;
 }
 
-uint8_t Clock::getDigitFromChar(char digit){
-    return digit - '0';
-}
 
 ISR ( TIMER1_COMPA_vect ) {
     if(Clock::clockSonar_.lastDistance_ < Sonar::TWO_METER_TICK_VALUE){

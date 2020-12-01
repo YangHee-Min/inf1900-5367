@@ -8,6 +8,7 @@
 #include "uart.h"
 #include "can.h"
 #include "sonar.h"
+#include "time.h"
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <util/delay.h> 
@@ -36,8 +37,6 @@ class Clock
 
     private:
         uint16_t getTimeInTicks(char time[5]);
-        uint8_t getDigitFromChar(char digit);
-
     
         static const uint16_t MIN_TIME = 0;
 

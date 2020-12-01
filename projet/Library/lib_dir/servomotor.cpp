@@ -14,11 +14,18 @@ Servomotor::Servomotor(uint8_t pinServomotor, volatile uint8_t* portPtr)
 {
 }
 
-void Servomotor::transmissionServomotorPWM(double angle){
+void Servomotor::changeAngle(double angle){
    
-    double pwmDuration = (angle*ANGLE_TO_MS_FACTOR + MINIMUM_MS_VALUE);
+    double pwmDuration = (angle * ANGLE_TO_MS_FACTOR + MINIMUM_MS_VALUE);
     PORTA |= (1 << pinServomotor_);
     _delay_ms(pwmDuration);
     PORTA &= ~(1 << pinServomotor_);
+}
+
+uint16_t getAngleFromString(char* angleString){
+    uint8_t hundredsValue = Time::getDigitFromChar(angleString[0]) * HUNDREDS_FACTOR;
+    uint8_t tensValue = Time::getDigitFromChar(angleString[1]) * TENS_FACTOR;
+    uint8_t unitsValue = Time::getDigitFromChar(angleString[2]);
+    return (hundredsValue + tensValue + unitsValue);
 }
 

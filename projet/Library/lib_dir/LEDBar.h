@@ -47,10 +47,10 @@ class LEDBar {
 
         enum Doors
         {
-            doorA,
-            doorB,
-            doorC,
-            doorD,
+            DOORA,
+            DOORB,
+            DOORC,
+            DOORD,
         };
 
 };

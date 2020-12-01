@@ -27,8 +27,14 @@ class Servomotor {
     public:
         //Constructor
         Servomotor(uint8_t pinServomotor, volatile uint8_t* portPtr);
-        void transmissionServomotorPWM(double angle);
+        void changeAngle(double angle);
+        static uint16_t getAngleFromString(char* angleString);
 
+        static const uint8_t ANGLE_STRING_SIZE = 4;
+        static const enum CONVERSION_FACTOR: uint8_t {
+            TENS_FACTOR = 10,
+            HUNDREDS_FACTOR = 100
+        }
 
     private:
         double ANGLE_TO_MS_FACTOR = 2.1/180;
