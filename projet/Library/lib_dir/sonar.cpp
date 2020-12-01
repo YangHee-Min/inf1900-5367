@@ -9,7 +9,6 @@ Sonar::Sonar()
     ,echoPin_(INT0)
 {
     initialisationISR();
-    //initialisationTrigPwm();
     debug_ = Uart();
 }
 
@@ -23,8 +22,7 @@ ISR ( INT0_vect ) {
 }
 
 ISR ( TIMER1_COMPB_vect ) {
-    PORTD |= (1 << PORTD5);
-    PORTD &= ~(1 << PORTD5);
+    PORTD ^= (1 << PORTD5);
     OCR1B += Sonar::TRIG_FREQUENCY;
     if(OCR1B > OCR1A)
         OCR1B = Sonar::TRIG_FREQUENCY;
@@ -40,8 +38,9 @@ void Sonar::initialisationISR(){
     TCCR1A = 0;
     TCCR1B |= (1 << CS10) | (1 << CS12) | (1 << WGM12);
     TCCR1C = 0;
-    TIMSK1 |= (1 << OCIE1B);
     #endif
+
+    TIMSK1 |= (1 << OCIE1B);
 
     // PORTD2 as input pin
     DDRD &= ~(1 << echoPin_); 
@@ -56,9 +55,8 @@ void Sonar::initialisationISR(){
     sei ();
 }
 
-int Sonar::obstaclesDetection(){
-    while(!detectedObject_){
-    }
+uint16_t Sonar::obstacleDetection(){
+    while(!detectedObject_){}
     cli();
     detectedObject_ = false;
     sei();

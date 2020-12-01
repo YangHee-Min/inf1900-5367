@@ -4,6 +4,7 @@ volatile uint16_t Clock::currentTime_ = 0;
 volatile uint8_t* Clock::portPtrGlobal_ = &PORTD;
 uint8_t Clock::pwmPinGlobal_ = PORTD4;
 can Clock::clockCan_;
+Sonar Clock::clockSonar_;
 uint8_t Clock::voltPin_ = PORTA0;
 
 Clock::Clock(volatile uint8_t* portPtr, 
@@ -35,8 +36,8 @@ void Clock::setTimerFrequency ( uint16_t ticks ) {
     TCCR1A = 0;
     TCCR1B |= (1 << CS10) | (1 << CS12) | (1 << WGM12);
     TCCR1C = 0;
-    TIMSK1 |= (1 << OCIE1A);
     #endif
+    TIMSK1 |= (1 << OCIE1A);
     sei();
 }
 
@@ -57,7 +58,7 @@ void Clock::resetTime(){
 }
 
 void Clock::updatePwmPin(){
-    uint16_t tenBitVoltValue = Clock::clockCan_.lecture(PORTA0);
+    uint16_t tenBitVoltValue = Clock::clockCan_.lecture(Clock::voltPin_);
     double VOLT_TO_TICK_FACTOR = -9.935;
     double newOcr1A = VOLT_TO_TICK_FACTOR * tenBitVoltValue + TICK_PERIOD_1_S;
     OCR1A = (uint16_t) newOcr1A;
@@ -84,6 +85,9 @@ uint8_t Clock::getDigitFromChar(char digit){
 }
 
 ISR ( TIMER1_COMPA_vect ) {
+    if(Clock::clockSonar_.lastDistance_ < Sonar::TWO_METER_TICK_VALUE){
+        return;
+    }
     Clock::updatePwmPin();
     *Clock::portPtrGlobal_ |= (1 << Clock::pwmPinGlobal_);
     *Clock::portPtrGlobal_ &= ~(1 << Clock::pwmPinGlobal_);
