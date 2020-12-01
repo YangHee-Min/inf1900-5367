@@ -18,16 +18,13 @@ include $(PATHLIB)/../Makefile_common.txt
 
 # Nom de votre projet
 # (utilisez un seul mot, exemple: 'monprojet')
-PROJECTNAME=keyboard_test
+PROJECTNAME=test_clock
 
 # Fichiers sources
 # Utilisez le suffixe .cpp pour les fichiers C++
 # Listez tous les fichiers a compiler, separes par
 # un espace. exemple: 'tp1.c tp2.cpp':
-PRJSRC=test_keyboard.cpp 
-
-# Inclusions additionnels (ex: -I/path/to/mydir)
-INC=-I/./$(PATHLIB)
+PRJSRC=test_clock.cpp 
 
 # Librairies a lier (ex: -lmylib)
 LIBS=$(LIBNAME)
@@ -106,10 +103,6 @@ OBJDEPS=$(CFILES:.c=.o) \
 #
 all: $(TRG) $(HEXROMTRG)
 
-# Definition de la macro DEBUG si on fait un make debug
-debug: CFLAGS += -DDEBUG -g
-debug: all
-
 # Implementation de la cible
 $(TRG): $(OBJDEPS)
 	$(CC) -static $(LDFLAGS) -o $(TRG) $(OBJDEPS) \
@@ -121,7 +114,7 @@ $(TRG): $(OBJDEPS)
 	$(CC) $(CFLAGS) -c $<
 # De C++ a objet
 %.o: %.cpp
-	$(CC) $(CFLAGS) $(CXXFLAGS) $(INC) -c $<
+	$(CC) $(CFLAGS) $(CXXFLAGS) -c $<
 
 # Verification des dependances (header dependencies)
 -include *.d

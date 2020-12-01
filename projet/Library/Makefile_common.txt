@@ -23,10 +23,7 @@ HEADERS= $(SRC:.cpp=.h)
 # Nom du fichier de la librairie
 LIB=lib$(LIBNAME).a
 
-# Inclusions additionnels (ex: -I/path/to/mydir)
-INC=-I/../..$(LIBFOLDER)
-
-CFLAGS=-I. -I/usr/include/simavr -MMD $(INC) -g -mmcu=$(MCU) -O$(OPTLEVEL) \
+CFLAGS=-I. -I/usr/include/simavr -MMD -g -mmcu=$(MCU) -O$(OPTLEVEL) \
 	-fpack-struct -fshort-enums             \
 	-funsigned-bitfields -funsigned-char    \
 	-Wall
