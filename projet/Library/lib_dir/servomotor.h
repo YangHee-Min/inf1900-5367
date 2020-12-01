@@ -31,8 +31,8 @@ class Servomotor {
 
 
     private:
-        double ANGLE_TO_MS_FACTOR = 90;
-        double MINIMUM_MS_VALUE = 2;
+        double ANGLE_TO_MS_FACTOR = 2.1/180;
+        double MINIMUM_MS_VALUE = 1.9;
        
 
         uint8_t pinServomotor_;

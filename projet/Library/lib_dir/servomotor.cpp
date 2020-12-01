@@ -16,7 +16,7 @@ Servomotor::Servomotor(uint8_t pinServomotor, volatile uint8_t* portPtr)
 
 void Servomotor::transmissionServomotorPWM(double angle){
    
-    double pwmDuration = (angle*2.1/180 + (double)1.9);
+    double pwmDuration = (angle*ANGLE_TO_MS_FACTOR + MINIMUM_MS_VALUE);
     PORTA |= (1 << pinServomotor_);
     _delay_ms(pwmDuration);
     PORTA &= ~(1 << pinServomotor_);
