@@ -46,7 +46,7 @@ void Clock::resetTime(){
 
 void Clock::startClock(){
     Clock::stopTime_ = currentTime_ - 1;
-    Clock:isClockStopped_ = false;
+    Clock::isClockStopped_ = false;
     if(stopTime_ > MAX_TIME)
         stopTime_ = MAX_TIME;
     setTime(currentTime_);

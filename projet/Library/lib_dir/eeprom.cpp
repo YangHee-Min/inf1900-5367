@@ -63,7 +63,7 @@ void Eeprom::saveInstruction(uint16_t startAddress,
     if(startAddress == endPointer_)
         endPointer_ = address;
     
-    uart_.print("Action sauvegardée. Retour au menu principal...\n", 6);
+    uart_.print("Action sauvegardée. Retour au menu principal...\n", 50);
 }
 
 uint16_t Eeprom::findInsertionAddress(char* time){
@@ -87,8 +87,8 @@ void Eeprom::shiftInstructionsUp(uint16_t startAddress){
         addressIterator < endPointer_ + INSTRUCTION_SIZE_EEPROM; 
         addressIterator += INSTRUCTION_SIZE_EEPROM){
             for(uint8_t i = 0; i < INSTRUCTION_SIZE_EEPROM; i++){
-                char instruction = uart_.readByteEeprom(addressIterator);
-                uart_.saveByteEeprom((uint16_t) (addressIterator - INSTRUCTION_SIZE_EEPROM), (uint8_t) instruction);
+                char instruction = uart_.readByteEeprom(addressIterator + i);
+                uart_.saveByteEeprom((uint16_t) (addressIterator + i - INSTRUCTION_SIZE_EEPROM), (uint8_t) instruction);
             }   
         }
         endPointer_ -= INSTRUCTION_SIZE_EEPROM;
@@ -96,4 +96,8 @@ void Eeprom::shiftInstructionsUp(uint16_t startAddress){
     else{
          uart_.print("L'adresse insérée n'est pas valide. Retour au menu \n", 39);
     }
+}
+
+void Eeprom::shiftInstructionsDown(uint16_t startAddress){
+    
 }

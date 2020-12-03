@@ -10,6 +10,7 @@ class Eeprom{
         static void deleteInstruction(const char tensChar, const char unitChar);
         static void addInstruction(char* timeTable, char* instructionTable);
         static void printInstructions();
+        static void shiftInstructionsUp(uint16_t startAddress);
 
         static uint16_t endPointer_;
         static Uart uart_;
@@ -25,7 +26,7 @@ class Eeprom{
         static uint8_t convertCharTo2Digit(char tensChar, char unitChar);
         static uint16_t convertIndexToByte(uint8_t index); 
         static void shiftInstructionsDown(uint16_t startAddress);
-        static void shiftInstructionsUp(uint16_t startAddress);
+        //static void shiftInstructionsUp(uint16_t startAddress);
         Eeprom(){}
 };
 #endif
