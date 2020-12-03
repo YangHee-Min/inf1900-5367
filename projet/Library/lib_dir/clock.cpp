@@ -35,7 +35,7 @@ uint16_t Clock::getCurrentTimeInTicks(){
     return Clock::currentTime_;
 }
 
-void Clock::setStartTime(const char time[Time::TIME_SIZE]){
+void Clock::setStartTime(const char* time){
     Clock::startTime_ = convertTimeInTicks(time);
     Clock::stopTime_ = Clock::startTime_ - 1;
     if(Clock::stopTime_ > MAX_TIME)
@@ -47,8 +47,8 @@ void Clock::setStartTime(const char time[Time::TIME_SIZE]){
 void Clock::resetTime(){
     Clock::currentTime_ = MIN_TIME;
     *portPtr_ |=  (1 << resetPin_);
+    _delay_ms(1);
     *portPtr_ &= ~(1 << resetPin_);
-    _delay_ms(3000);
 }
 
 void Clock::startClock(){
@@ -74,7 +74,7 @@ void Clock::updatePwmPin(){
 }
 
 
-uint16_t Clock::convertTimeInTicks(const char time[5]){
+uint16_t Clock::convertTimeInTicks(const char* time){
     const uint8_t TIME_SIZE = 5;
     const uint8_t DECADE_SCALE_FACTOR = 10;
     const uint8_t TIME_SCALE_FACTOR = 60;
@@ -98,10 +98,12 @@ void Clock::setTime(const char time[5]){
 void Clock::setTime(uint16_t ticks){
     resetTime();
     Clock::currentTime_ = ticks;
-
+    _delay_ms(5);
     for(uint16_t i = 0; i < Clock::currentTime_; i++){
         *portPtr_ |= (1 << pwmPin_);
+        //_delay_ms(1);
         *portPtr_ &= ~(1 << pwmPin_);
+        //_delay_ms(1);
     }
 }
 

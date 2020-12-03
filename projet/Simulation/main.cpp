@@ -26,9 +26,9 @@ enum instructionIndex:uint8_t{
 
 enum doorState{OPEN, CLOSE};
 enum doorStateChar{OPEN_CHAR = '0', CLOSE_CHAR = '1'};
-volatile uint16_t address = 0;
 Uart uart;
 
+//a
 void displayMenu(){
     uart.print("\n", 2);
     uart.print("1- Définir l'heure de départ\n", 32);
@@ -105,7 +105,7 @@ bool validateMachineAction(char* machineInstruction, Keyboard& keyboard){
     return false;
 }
 
-void option1(Keyboard& keyboard, Clock& clock){//a
+void option1(Keyboard& keyboard, Clock& clock){
     uart.print("\nEntrez l’heure et les minutes de départ de la simulation. HHMM\n", 68);
     char decadeHours = keyboard.readKey();
     char unitHours = keyboard.readKey();
@@ -125,9 +125,8 @@ void option1(Keyboard& keyboard, Clock& clock){//a
 void option2(LEDBar& ledbar, Keyboard& keyboard, Servomotor& servomotorE, Servomotor& servomotorF){
     uart.print("\nEntrez l’identifiant d’un dispositif suivi de sa valeur de configuration. (A|B|C|D)(0|1) ou (E|F)(000-180)\n", 113);
     char machineInstruction[INSTRUCTION_SIZE];
-
     if(validateMachineAction(machineInstruction, keyboard)){
-        if(machineInstruction[DEVICE_INDEX] >= 'A' || machineInstruction[0] <= 'D'){
+        if(machineInstruction[DEVICE_INDEX] >= 'A' && machineInstruction[0] <= 'D'){
             uint8_t door = machineInstruction[DEVICE_INDEX] - 'A';
             if(machineInstruction[STATE_INDEX_1] == OPEN_CHAR)
                 ledbar.openDoor(door);
@@ -139,7 +138,7 @@ void option2(LEDBar& ledbar, Keyboard& keyboard, Servomotor& servomotorE, Servom
             uint16_t angle = Servomotor::getAngleFromString(angleString);
             
             switch(machineInstruction[DEVICE_INDEX]){
-                case 'E': 
+                case 'E':
                     servomotorE.changeAngle(angle);
                     break;
                 case 'F':
@@ -179,7 +178,7 @@ void option5(Keyboard& keyboard){
     char deleteValue1 = keyboard.readKey();
     char deleteValue2 = keyboard.readKey();
 
-    Eeprom::deleteInstruction(deleteValue1, deleteValue2);//a
+    Eeprom::deleteInstruction(deleteValue1, deleteValue2);//
 }
 
 /*
@@ -202,7 +201,7 @@ void option6(Clock& clock, LEDBar& ledbar, Servomotor& servomotorE, Servomotor& 
     uint8_t addressIterator = INITIAL_ADDRESS;
     char time[Time::TIME_SIZE];
     while(isRunning){
-        // Get the time from eeprom put into a char table
+        // TODO
         for(;addressIterator <= address; addressIterator += INSTRUCTION_SIZE){
             for(uint8_t i = 0; i < Time::TIME_SIZE - 1; i++, addressIterator++){
                 time[i] = uart.readByteEeprom(addressIterator);
@@ -263,12 +262,13 @@ void option6(Clock& clock, LEDBar& ledbar, Servomotor& servomotorE, Servomotor& 
 int main(){
     Keyboard keyboard = Keyboard(&PORTA, &PINA, PORTA4, PORTA3, PORTA2, PORTA1, PORTA5);
     Clock clock = Clock(&PORTD, PORTD4, PORTD6, PORTA0);
+    const char startTime[5] = "0000";
+    clock.setStartTime(startTime); 
     LEDBar ledbar = LEDBar(PORTC0, PORTC1, PORTC2, PORTC3, PORTC4, &PORTC);
     Servomotor servomotorE = Servomotor(PORTA6, &PORTA);
     Servomotor servomotorF = Servomotor(PORTA7, &PORTA);
 
     for(;;){
-
         displayMenu();
         char optionKey = keyboard.readKey();
         

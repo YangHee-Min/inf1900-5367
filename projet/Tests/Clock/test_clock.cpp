@@ -7,11 +7,10 @@ int main(){
     Uart uart;
 
     Clock clock = Clock(&PORTD, PORTD4, PORTD6, PORTA0);
-    clock.setStartTime("0000");
-    
-    uart.print("Starting clock...\n", 19);
-    clock.startClock();
+    clock.setTime(1439);
+    //uart.print("Starting clock...\n", 19);
+    //clock.startClock();
     for(;;){
-        //uart.print("Running...\n",12);
+        
     }
 }//
