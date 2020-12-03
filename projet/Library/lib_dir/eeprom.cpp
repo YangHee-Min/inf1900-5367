@@ -43,6 +43,10 @@ void Eeprom::deleteInstruction(const char tensChar, const char unitChar){
     uint8_t indexToDelete = convertCharTo2Digit(tensChar, unitChar);
     uint8_t indexStartCopy = indexToDelete + INCREMENT_VALUE;
     uint16_t copyStartAddress = convertIndexToByte(indexStartCopy);
+    if(copyStartAddress == INITIAL_ADDRESS || copyStartAddress >= endPointer_ + INSTRUCTION_SIZE_EEPROM){
+        uart_.print("Index invalide. Retour au menu principal... \n", 46);
+        return;
+    }
     shiftInstructionsUp(copyStartAddress);
 }
 
@@ -78,11 +82,9 @@ uint8_t Eeprom::convertCharTo2Digit(const char tensChar, const char unitChar){
 uint16_t Eeprom::convertIndexToByte(uint8_t index){
     return (index - INCREMENT_VALUE) * INSTRUCTION_SIZE_EEPROM;
 }
-void Eeprom::shiftInstructionsDown(uint16_t startAddress){
 
-}
 void Eeprom::shiftInstructionsUp(uint16_t startAddress){
-    if (startAddress < endPointer_){
+    if ((startAddress < endPointer_ + INSTRUCTION_SIZE_EEPROM) && (startAddress != INITIAL_ADDRESS)){
         for(uint8_t addressIterator = startAddress; 
         addressIterator < endPointer_ + INSTRUCTION_SIZE_EEPROM; 
         addressIterator += INSTRUCTION_SIZE_EEPROM){
@@ -94,10 +96,23 @@ void Eeprom::shiftInstructionsUp(uint16_t startAddress){
         endPointer_ -= INSTRUCTION_SIZE_EEPROM;
     }
     else{
-         uart_.print("L'adresse insérée n'est pas valide. Retour au menu \n", 39);
+         uart_.print("Décalage vers le haut échoué. Retour au menu principal\n", 59);
     }
 }
 
 void Eeprom::shiftInstructionsDown(uint16_t startAddress){
-    
+    if (startAddress < endPointer_){
+        for(uint8_t addressIterator = endPointer_ - INSTRUCTION_SIZE_EEPROM; 
+        addressIterator > startAddress - INCREMENT_VALUE; 
+        addressIterator -= INSTRUCTION_SIZE_EEPROM){
+            for(uint8_t i = 0; i < INSTRUCTION_SIZE_EEPROM; i++){
+                char instruction = uart_.readByteEeprom(addressIterator + i);
+                uart_.saveByteEeprom((uint16_t) (addressIterator + i + INSTRUCTION_SIZE_EEPROM), (uint8_t) instruction);
+            }   
+        }
+        endPointer_ += INSTRUCTION_SIZE_EEPROM;
+    }
+    else{
+         uart_.print("L'adresse insérée n'est pas valide. Retour au menu \n", 39);
+    }
 }

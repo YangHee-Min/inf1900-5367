@@ -9,7 +9,6 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-
 const uint8_t MINIMUM_ANGLE_VALUE = 0;
 const uint8_t MAXIMUM_ANGLE_VALUE = 180;
 const uint8_t ADDRESS_SIZE = 8;
@@ -31,6 +30,7 @@ volatile uint16_t address = 0;
 Uart uart;
 
 void displayMenu(){
+    uart.print("\n", 2);
     uart.print("1- Définir l'heure de départ\n", 32);
     uart.print("2- Définir l'état d'un dispositif\n", 37);
     uart.print("3- Afficher les actions programmées\n", 38);
@@ -46,7 +46,7 @@ void printInvalidMessage(){
 void initialisationISR(){
     cli ();
     EIMSK |= (1 << INT1);
-    EICRA |= (1 << ISC10) | (1 << ISC11);
+    EICRA |= (1 << ISC11);
     sei ();
 
 }
@@ -105,11 +105,7 @@ bool validateMachineAction(char* machineInstruction, Keyboard& keyboard){
     return false;
 }
 
-void sort(){
-    
-}
-
-void option1(Keyboard& keyboard, Clock& clock){
+void option1(Keyboard& keyboard, Clock& clock){//a
     uart.print("\nEntrez l’heure et les minutes de départ de la simulation. HHMM\n", 68);
     char decadeHours = keyboard.readKey();
     char unitHours = keyboard.readKey();
@@ -131,12 +127,12 @@ void option2(LEDBar& ledbar, Keyboard& keyboard, Servomotor& servomotorE, Servom
     char machineInstruction[INSTRUCTION_SIZE];
 
     if(validateMachineAction(machineInstruction, keyboard)){
-
         if(machineInstruction[DEVICE_INDEX] >= 'A' || machineInstruction[0] <= 'D'){
-            if(machineInstruction[STATE_INDEX_1] == OPEN)
-                ledbar.openDoor(machineInstruction[DEVICE_INDEX]);
-            else if(machineInstruction[STATE_INDEX_1] == CLOSE)
-                ledbar.closeDoor(machineInstruction[DEVICE_INDEX]);
+            uint8_t door = machineInstruction[DEVICE_INDEX] - 'A';
+            if(machineInstruction[STATE_INDEX_1] == OPEN_CHAR)
+                ledbar.openDoor(door);
+            else if(machineInstruction[STATE_INDEX_1] == CLOSE_CHAR)
+                ledbar.closeDoor(door);
         }
         else if(machineInstruction[DEVICE_INDEX] == 'E' || machineInstruction[DEVICE_INDEX == 'F']){
             char angleString[4] = {machineInstruction[STATE_INDEX_1], machineInstruction[STATE_INDEX_2], machineInstruction[STATE_INDEX_3]};
@@ -157,28 +153,25 @@ void option2(LEDBar& ledbar, Keyboard& keyboard, Servomotor& servomotorE, Servom
 }
 
 void option3(){
-    const uint8_t SINGLE_CHAR_SIZE = 2;
-    const uint8_t DECREMENT_VALUE = 1;
     uart.print("\nAffichage des actions programmées:\n", 37);
     Eeprom::printInstructions();
 }
 
 void option4(Keyboard& keyboard){
-    const uint8_t DECREMENT_VALUE = 1;
     uart.print("\nEntrez une action à programmer. HHMM (A|B|C|D)(0|1) ou (E|F)(000-180)\n", 72);
     char decadeHours = keyboard.readKey();
     char unitHours = keyboard.readKey();
     char decadeMinutes = keyboard.readKey();
     char unitMinutes = keyboard.readKey();
     
-    char machineInstruction[INSTRUCTION_SIZE];
+    char machineInstruction[Eeprom::INSTRUCTION_SIZE_ARRAY];
     char time[Time::TIME_SIZE] = {decadeHours, unitHours, decadeMinutes, unitMinutes};
     if(!(validateMachineAction(machineInstruction, keyboard)) || !(Time::timeIsValid(time))){
         printInvalidMessage();
         return;
     }
-    // Instruction below must eventually be replace for the shifting version
-    Eeprom::saveInstruction(Eeprom::endPointer_, time, machineInstruction);
+    
+    Eeprom::addInstruction(time, machineInstruction);
 }
 
 void option5(Keyboard& keyboard){
@@ -186,22 +179,7 @@ void option5(Keyboard& keyboard){
     char deleteValue1 = keyboard.readKey();
     char deleteValue2 = keyboard.readKey();
 
-    Eeprom::deleteInstruction(deleteValue1, deleteValue2);
-
-    // const uint16_t COPY_START_ADDRESS = (Time::getDigitFromChar(deleteValue1) * Servomotor::TENS_FACTOR + Time::getDigitFromChar(deleteValue2)) * 8;
-    
-    // if (address > INITIAL_ADDRESS){
-    //     for(uint8_t addressIterator = COPY_START_ADDRESS; addressIterator < address + ADDRESS_SIZE; addressIterator += ADDRESS_SIZE){
-    //         for(uint8_t i = 0; i < ADDRESS_SIZE; i++){
-    //             char instruction = uart.readByteEeprom(addressIterator);
-    //             uart.saveByteEeprom((uint16_t) (addressIterator - ADDRESS_SIZE), (uint8_t) instruction);
-    //         }   
-    //     }
-    //     address -= ADDRESS_SIZE;
-    // }
-    // else{
-    //      uart_.print("L'adresse insérée n'est pas valide. Retour au menu \n", 39);
-    // }
+    Eeprom::deleteInstruction(deleteValue1, deleteValue2);//a
 }
 
 /*
@@ -220,6 +198,7 @@ void option6(Clock& clock, LEDBar& ledbar, Servomotor& servomotorE, Servomotor& 
     
     uart.print("Option simulation choisie. Début de la simulation...\n", 55);
     clock.startClock();
+    initialisationISR();
     uint8_t addressIterator = INITIAL_ADDRESS;
     char time[Time::TIME_SIZE];
     while(isRunning){
@@ -276,6 +255,8 @@ void option6(Clock& clock, LEDBar& ledbar, Servomotor& servomotorE, Servomotor& 
         // Checks if 24 hour limit passed
             // If so stop clock
     }
+    clock.stopClock();
+    isRunning = true;
     uart.print("Simulation terminée. Retour au menu principal...\n", 50);
 }
 

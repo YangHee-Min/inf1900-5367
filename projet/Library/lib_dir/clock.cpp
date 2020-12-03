@@ -2,6 +2,7 @@
 
 volatile uint16_t Clock::currentTime_ = 0;
 uint16_t Clock::stopTime_ = 0;
+uint16_t Clock::startTime_ = 0;
 volatile uint8_t* Clock::portPtrGlobal_ = &PORTD;
 uint8_t Clock::pwmPinGlobal_ = PORTD4;
 volatile bool Clock::isClockStopped_ = false;
@@ -27,30 +28,31 @@ Clock::Clock(volatile uint8_t* portPtr,
         voltPin_ = voltPin;
 
     DDRA &= ~(1 << voltPin_);
-    DDRD |= (1 << pwmPin) | (1 << resetPin);
+    DDRD |= (1 << pwmPin_) | (1 << resetPin_);
 }
 
 uint16_t Clock::getCurrentTimeInTicks(){
-    return currentTime_;
+    return Clock::currentTime_;
 }
 
 void Clock::setStartTime(const char time[Time::TIME_SIZE]){
-    currentTime_ = convertTimeInTicks(time);
+    Clock::startTime_ = convertTimeInTicks(time);
+    Clock::stopTime_ = Clock::startTime_ - 1;
+    if(Clock::stopTime_ > MAX_TIME)
+        Clock::stopTime_ = MAX_TIME;
+
+    setTime(Clock::startTime_);
 }
 
 void Clock::resetTime(){
-    currentTime_ = 0;
+    Clock::currentTime_ = MIN_TIME;
     *portPtr_ |=  (1 << resetPin_);
     *portPtr_ &= ~(1 << resetPin_);
+    _delay_ms(3000);
 }
 
 void Clock::startClock(){
-    Clock::stopTime_ = currentTime_ - 1;
     Clock::isClockStopped_ = false;
-    if(stopTime_ > MAX_TIME)
-        stopTime_ = MAX_TIME;
-    setTime(currentTime_);
-    _delay_ms(2);
     setTimerFrequency(TICK_PERIOD_1_S);
 }
 
@@ -95,9 +97,9 @@ void Clock::setTime(const char time[5]){
 
 void Clock::setTime(uint16_t ticks){
     resetTime();
-    currentTime_ = ticks;
+    Clock::currentTime_ = ticks;
 
-    for(uint16_t i = 0; i < currentTime_; i++){
+    for(uint16_t i = 0; i < Clock::currentTime_; i++){
         *portPtr_ |= (1 << pwmPin_);
         *portPtr_ &= ~(1 << pwmPin_);
     }

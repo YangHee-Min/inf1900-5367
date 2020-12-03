@@ -28,9 +28,11 @@ class Clock
         void toggleClock();
         static void updatePwmPin();
         static uint16_t convertTimeInTicks(const char time[5]);
-
+        void setTime(const char time[Time::TIME_SIZE]);
+        
         static volatile uint16_t currentTime_;
         static uint16_t stopTime_;
+        static uint16_t startTime_;
         static volatile uint8_t *portPtrGlobal_;
         static uint8_t pwmPinGlobal_ ;
         static volatile bool isClockStopped_;
@@ -43,7 +45,6 @@ class Clock
         static const uint16_t MINIMUM_TICK_PERIOD = 100;
 
     private:
-        void setTime(const char time[Time::TIME_SIZE]);
         void setTime(uint16_t ticks);
         void setTimerFrequency(uint16_t ticks);
     

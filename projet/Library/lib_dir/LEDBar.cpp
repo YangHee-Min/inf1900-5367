@@ -60,8 +60,6 @@ void LEDBar::openDoor(uint8_t doorType){
 
 void LEDBar::closeDoor(uint8_t doorType)
 {
-    Uart uart;
-    uart.print("close\n", 7);
     for(uint8_t i = MIN_BIT_POSITION; i < MAX_LED_BAR_POSITION; i++)
     {
         LEDState_ |= ((uint32_t)1 << (MAX_LED_BAR_POSITION * doorType + i));
