@@ -8,7 +8,7 @@
 
 #include <avr/io.h> 
 #include <util/delay.h>
-#include "debug.h"
+#include "uart.h"
 
 class Keyboard{
     public:
@@ -20,9 +20,10 @@ class Keyboard{
                 uint8_t muxS0,
                 uint8_t inputPin);
     
-    char readKey();
     bool buttonIsPressed(uint8_t button, volatile uint8_t& pinx);
+    char readKey();
     private:
+        char readKeyboard();
         int currentScoutedKeyValue_;
         volatile uint8_t* portPtr_;
         volatile uint8_t* pinPtr_;
@@ -31,6 +32,7 @@ class Keyboard{
         uint8_t muxS1_;
         uint8_t muxS0_;
         uint8_t inputPin_;
+        Uart uart_;
         static const uint8_t PAST_END_OF_ENUM = 16;
         static const uint8_t INPUT_DELAY = 1;
         enum KeyboardValue: uint8_t{KEY_0 = 0b0000,

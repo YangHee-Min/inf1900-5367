@@ -1,3 +1,6 @@
+#ifndef TIME_H
+#define TIME_H
+
 #include <avr/io.h>
 
 class Time{
@@ -11,3 +14,4 @@ class Time{
 
         static bool timeIsValid(char time[TIME_SIZE]);
 };
+#endif

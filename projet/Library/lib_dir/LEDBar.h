@@ -15,7 +15,7 @@
 
 #include <avr/io.h> 
 #include <util/delay.h>
-#include "debug.h"
+#include "uart.h"
 
 class LEDBar {
 
@@ -32,6 +32,15 @@ class LEDBar {
         void closeDoor(uint8_t doorType);
         void displayState();
         uint32_t LEDState_;
+
+        enum Doors
+        {
+            DOOR_A,
+            DOOR_B,
+            DOOR_C,
+            DOOR_D
+        };
+        
     private:
         
         uint8_t SHC_;
@@ -44,14 +53,7 @@ class LEDBar {
         static const uint8_t MAX_LED_BAR_POSITION = 8;
         static const uint8_t MIN_BIT_POSITION = 0;
         static const uint8_t MAX_BIT_POSITION = 32;
-
-        enum Doors
-        {
-            DOORA,
-            DOORB,
-            DOORC,
-            DOORD,
-        };
+        static const uint8_t ANIMATION_DELAY_MS = 125;
 
 };
 #endif

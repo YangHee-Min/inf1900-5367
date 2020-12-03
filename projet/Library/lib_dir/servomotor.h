@@ -20,6 +20,7 @@
 #include <avr/io.h> 
 #include <util/delay.h>
 #include "debug.h"
+#include "time.h"
 
 
 class Servomotor {
@@ -31,14 +32,14 @@ class Servomotor {
         static uint16_t getAngleFromString(char* angleString);
 
         static const uint8_t ANGLE_STRING_SIZE = 4;
-        static const enum CONVERSION_FACTOR: uint8_t {
+        enum CONVERSION_FACTOR: uint8_t {
             TENS_FACTOR = 10,
             HUNDREDS_FACTOR = 100
-        }
+        };
 
     private:
-        double ANGLE_TO_MS_FACTOR = 2.1/180;
-        double MINIMUM_MS_VALUE = 1.9;
+        double ANGLE_TO_MS_FACTOR = 1.1/180;
+        double MINIMUM_MS_VALUE = 0.9;
        
 
         uint8_t pinServomotor_;

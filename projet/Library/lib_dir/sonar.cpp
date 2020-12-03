@@ -7,7 +7,9 @@ Sonar::Sonar()
     :portPtr_(&PORTD)
     ,trigPin_(PORTD5)
     ,echoPin_(INT0)
-{
+{   
+    DDRD |= (1<< trigPin_);
+    DDRD &= ~(1 << INT0);
     initialisationISR();
     debug_ = Uart();
 }

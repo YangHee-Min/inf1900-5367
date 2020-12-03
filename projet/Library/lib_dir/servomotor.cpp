@@ -12,6 +12,7 @@ Servomotor::Servomotor(uint8_t pinServomotor, volatile uint8_t* portPtr)
     :pinServomotor_(pinServomotor)
     ,portPtr_(portPtr)
 {
+    DDRA |= (1 << pinServomotor_);
 }
 
 void Servomotor::changeAngle(double angle){
@@ -22,10 +23,10 @@ void Servomotor::changeAngle(double angle){
     PORTA &= ~(1 << pinServomotor_);
 }
 
-uint16_t getAngleFromString(char* angleString){
-    uint8_t hundredsValue = Time::getDigitFromChar(angleString[0]) * HUNDREDS_FACTOR;
-    uint8_t tensValue = Time::getDigitFromChar(angleString[1]) * TENS_FACTOR;
-    uint8_t unitsValue = Time::getDigitFromChar(angleString[2]);
+uint16_t Servomotor::getAngleFromString(char* angleString){
+    uint16_t hundredsValue = Time::getDigitFromChar(angleString[0]) * Servomotor::HUNDREDS_FACTOR;
+    uint16_t tensValue = Time::getDigitFromChar(angleString[1]) * Servomotor::TENS_FACTOR;
+    uint16_t unitsValue = Time::getDigitFromChar(angleString[2]);
     return (hundredsValue + tensValue + unitsValue);
 }
 

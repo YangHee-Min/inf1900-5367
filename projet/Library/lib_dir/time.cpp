@@ -5,7 +5,7 @@ uint8_t Time::getDigitFromChar(char digit){
 }
 
 bool Time::timeDigitIsValid(char timeDigit, char maxValue){
-    return (timeDigit < '0' || timeDigit > maxValue);
+    return (timeDigit > '0' || timeDigit < maxValue);
 }
 
 bool Time::timeIsValid(char time[TIME_SIZE]){

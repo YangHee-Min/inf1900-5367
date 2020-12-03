@@ -21,11 +21,11 @@ class Uart{
         void transmission(uint8_t data); 
         void print(const char message[], const unsigned int size);
         uint8_t sendUsartToEeprom();
-        uint8_t readByteEeprom(const uint16_t address); 
+        uint8_t readByteEeprom(const uint16_t address);
+        void saveByteEeprom(const uint16_t address, uint8_t byteToSave); 
 
     private:
         // Functions
-        void saveByteEeprom(const uint16_t address, uint8_t byteToSave);
         uint8_t receiveRS232Byte();
         void initialisation();
         

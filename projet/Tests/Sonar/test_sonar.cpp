@@ -3,7 +3,6 @@
 #include "../../Library/lib_dir/clock.h"
 
 int main(){
-    DDRD |= (1 << PORTD0) | (1 << PORTD1) | (1 << PORTD4) | (1 << PORTD6);
     Uart uart;
     
     #if CLOCK == 0
@@ -13,10 +12,11 @@ int main(){
     #endif
 
     #if CLOCK == 1
-    DDRA &= ~(1 << PORTA0);
     Clock clock = Clock(&PORTD, PORTD4, PORTD6, PORTA0);
-    clock.resetTime();
-    clock.setTimerFrequency((uint16_t) 7812);
+    clock.setStartTime("0325");
+    uart.print("Go!\n", 5);
+    clock.startClock();
+    Sonar sonar = Sonar();
     #endif 
 
     #if CLOCK == 0
@@ -39,8 +39,14 @@ int main(){
     }
     #endif
     #if CLOCK == 1
+    _delay_ms(3000);
+    uart.print("STOP\n", 6);
+    clock.stopClock();
+    _delay_ms(3000);
+    uart.print("START\n", 7);
+    clock.toggleClock();
     for(;;){
         uart.print("running...\n", 12);
     }
-    #endif
+    #endif//
 }

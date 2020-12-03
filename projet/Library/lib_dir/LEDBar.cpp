@@ -22,6 +22,7 @@ LEDBar::LEDBar(uint8_t SHC,
         ,OE_(OE)
         ,portPtr_(portPtr)
 {
+    DDRC |= (1 << SHC) | (1 << STC) | (1 << DS) | (1 << MR) | (1 << OE);
 }
 
 
@@ -49,22 +50,22 @@ void LEDBar::displayState(){
 }
 
 void LEDBar::openDoor(uint8_t doorType){
- 
-    Debug debug = Debug();
     for(uint8_t i = MAX_LED_BAR_POSITION; i > MIN_BIT_POSITION; i--){
         
         LEDState_ &= ~((uint32_t)1 << ((MAX_LED_BAR_POSITION * doorType) + (i - 1)));
         displayState();
-        _delay_ms(500);
+        _delay_ms(ANIMATION_DELAY_MS);
     }
 }
 
 void LEDBar::closeDoor(uint8_t doorType)
 {
+    Uart uart;
+    uart.print("close\n", 7);
     for(uint8_t i = MIN_BIT_POSITION; i < MAX_LED_BAR_POSITION; i++)
     {
         LEDState_ |= ((uint32_t)1 << (MAX_LED_BAR_POSITION * doorType + i));
         displayState();
-        _delay_ms(500);
+        _delay_ms(ANIMATION_DELAY_MS);
     }
 }

@@ -1,24 +1,24 @@
 #include "../../Library/lib_dir/LEDBar.h"
 
 int main(){
-    DDRC = 0xff;
-    DDRD = 0xff;
+    // DDRC = 0xff;
+    // DDRD = 0xff;
     LEDBar bar = LEDBar(PORTC0, PORTC1, PORTC2, PORTC3, PORTC4, &PORTC);
-    Debug debug;
+    Uart debug;
 
-    debug.DEBUG_PRINT("start", 6);
+    debug.print("start", 6);
     // bar.openDoor(0);
-    // bar.closeDoor(0);
-    /*bar.LEDState_ = 0xFFFFFFFF;
-    bar.displayState();
-    debug.DEBUG_PRINT("end", 4);*/
+    // // bar.closeDoor(0);
+    // bar.LEDState_ = 0xFFFFFFFF;
+    // bar.displayState();
+    // debug.print("end", 4);
     
     for(int i = 0; i < 4; i++){
         bar.closeDoor(i);
-        debug.DEBUG_PRINT("close A\n", 9);
+        debug.print("close A\n", 9);
 
         bar.openDoor(i);
-        debug.DEBUG_PRINT("open A\n", 8);
+        debug.print("open A\n", 8);
     }
         // bar.closeDoor(0);
         // debug.DEBUG_PRINT("close A\n", 9);
@@ -45,6 +45,6 @@ int main(){
         // bar.openDoor(3);
         // debug.DEBUG_PRINT("open", 5);
 
-//5
+//a
 
 }

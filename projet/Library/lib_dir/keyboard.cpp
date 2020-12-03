@@ -15,6 +15,8 @@ Keyboard::Keyboard(volatile uint8_t *portPtr,
     ,muxS0_(muxS0)
     ,inputPin_(inputPin)
 {
+    DDRA |=  (1 << demuxS1_) | (1 << demuxS0_) |(1 << muxS1_) |(1 << muxS0_);
+    DDRA &= ~(1 << inputPin_);
 }
 
 bool Keyboard::buttonIsPressed(uint8_t button, volatile uint8_t& pinx){
@@ -30,12 +32,19 @@ bool Keyboard::buttonIsPressed(uint8_t button, volatile uint8_t& pinx){
 }
 
 char Keyboard::readKey(){
+    char returnValue = readKeyboard();
+    while(*pinPtr_ & (1 << inputPin_)){}
+    uart_.transmission(returnValue);
+    return returnValue;
+}
+
+char Keyboard::readKeyboard(){
 
     for (currentScoutedKeyValue_ = KEY_0 ;; currentScoutedKeyValue_++){
         if(currentScoutedKeyValue_ >= PAST_END_OF_ENUM){
             currentScoutedKeyValue_ = 0;
         }
-
+        
         switch(currentScoutedKeyValue_){
             case KEY_0:
                 *portPtr_ &= ~((1 << demuxS1_) | (1 << demuxS0_));
