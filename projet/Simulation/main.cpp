@@ -186,17 +186,22 @@ void option5(Keyboard& keyboard){
     char deleteValue1 = keyboard.readKey();
     char deleteValue2 = keyboard.readKey();
 
-    const uint16_t COPY_START_ADDRESS = (Time::getDigitFromChar(deleteValue1) * Servomotor::TENS_FACTOR + Time::getDigitFromChar(deleteValue2)) * 8;
+    Eeprom::deleteInstruction(deleteValue1, deleteValue2);
+
+    // const uint16_t COPY_START_ADDRESS = (Time::getDigitFromChar(deleteValue1) * Servomotor::TENS_FACTOR + Time::getDigitFromChar(deleteValue2)) * 8;
     
-    if (address > INITIAL_ADDRESS){
-        for(uint8_t addressIterator = COPY_START_ADDRESS; addressIterator < address + ADDRESS_SIZE; addressIterator += ADDRESS_SIZE){
-            for(uint8_t i = 0; i < ADDRESS_SIZE; i++){
-                char instruction = uart.readByteEeprom(addressIterator);
-                uart.saveByteEeprom((uint16_t) (addressIterator - ADDRESS_SIZE), (uint8_t) instruction);
-            }   
-        }
-        address -= ADDRESS_SIZE;
-    }
+    // if (address > INITIAL_ADDRESS){
+    //     for(uint8_t addressIterator = COPY_START_ADDRESS; addressIterator < address + ADDRESS_SIZE; addressIterator += ADDRESS_SIZE){
+    //         for(uint8_t i = 0; i < ADDRESS_SIZE; i++){
+    //             char instruction = uart.readByteEeprom(addressIterator);
+    //             uart.saveByteEeprom((uint16_t) (addressIterator - ADDRESS_SIZE), (uint8_t) instruction);
+    //         }   
+    //     }
+    //     address -= ADDRESS_SIZE;
+    // }
+    // else{
+    //      uart_.print("L'adresse insérée n'est pas valide. Retour au menu \n", 39);
+    // }
 }
 
 /*

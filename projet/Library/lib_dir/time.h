@@ -13,5 +13,7 @@ class Time{
                                     char maxValue);
 
         static bool timeIsValid(char time[TIME_SIZE]);
+
+        static const uint8_t TENS_FACTOR = 10;
 };
 #endif
