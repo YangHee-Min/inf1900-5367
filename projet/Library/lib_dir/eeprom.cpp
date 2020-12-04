@@ -1,4 +1,5 @@
 #include "eeprom.h"
+#include "clock.h"
 
 uint16_t Eeprom::endPointer_ = Eeprom::INITIAL_ADDRESS;
 Uart Eeprom::uart_;
@@ -13,17 +14,15 @@ void Eeprom::addInstruction(char* timeTable, char* instructionTable){
 
 void Eeprom::printInstructions(){
     if (endPointer_ > INITIAL_ADDRESS){
-        for(uint16_t addressIterator = INITIAL_ADDRESS; addressIterator < endPointer_;){
+        for(uint16_t addressIterator = INITIAL_ADDRESS; addressIterator < endPointer_; addressIterator+= INSTRUCTION_SIZE_EEPROM){
             char timeTable[Time::TIME_SIZE];
-            for(uint8_t i = 0; i < Time::TIME_SIZE - INCREMENT_VALUE; i++, addressIterator++){
-                timeTable[i] = uart_.readByteEeprom(addressIterator);
-            }
+            readTime(timeTable, addressIterator);
             uart_.print(timeTable, Time::TIME_SIZE - 1);
             uart_.print(" ", SINGLE_CHAR_SIZE);
 
             char instructionTable[INSTRUCTION_SIZE_ARRAY];
-            for(uint8_t j = 0; j < INSTRUCTION_SIZE_ARRAY - INCREMENT_VALUE; j++, addressIterator++){
-                char instruction = uart_.readByteEeprom(addressIterator);
+            for(uint8_t j = 0; j < INSTRUCTION_SIZE_ARRAY - INCREMENT_VALUE; j++){
+                char instruction = uart_.readByteEeprom(addressIterator + INSTRUCTION_SHIFT + j);
                 if(instruction != 'X')
                     instructionTable[j] = instruction;
                 else{
@@ -36,6 +35,19 @@ void Eeprom::printInstructions(){
     }
     else {
         uart_.print("Il n’y a aucune action programmée. Retour au menu principal...\n", 67);
+    }
+}
+
+void Eeprom::readTime(char* time, uint16_t address){
+    for(uint8_t i = 0; i < Time::TIME_SIZE - INCREMENT_VALUE; i++){
+        time[i] = uart_.readByteEeprom(address + i);
+    }
+}
+
+void Eeprom::readInstruction(char* instruction, uint16_t address){
+    uint16_t addressIterator = address + INSTRUCTION_SHIFT;
+    for(uint8_t i = 0; i < Time::TIME_SIZE - INCREMENT_VALUE; i++){
+        instruction[i] = uart_.readByteEeprom(addressIterator + i);
     }
 }
 
@@ -72,6 +84,17 @@ void Eeprom::saveInstruction(uint16_t startAddress,
 
 uint16_t Eeprom::findInsertionAddress(char* time){
     // TODO
+    uint16_t timeDifference = Time::convertTimeInTicks(time) - Clock::startTime_;
+    char cmpTime[Time::TIME_SIZE];
+    uint16_t cmpTimeDifference;
+    for(uint16_t addressIterator = INITIAL_ADDRESS;addressIterator < endPointer_; addressIterator+= INSTRUCTION_SIZE_EEPROM){
+        readTime(cmpTime, addressIterator);
+        cmpTimeDifference = Time::convertTimeInTicks(cmpTime) - Clock::startTime_;
+
+        if(timeDifference < cmpTimeDifference){
+            return addressIterator;
+        }
+    }
     return endPointer_;
 }
 
@@ -103,7 +126,7 @@ void Eeprom::shiftInstructionsUp(uint16_t startAddress){
 void Eeprom::shiftInstructionsDown(uint16_t startAddress){
     if (startAddress < endPointer_){
         for(uint8_t addressIterator = endPointer_ - INSTRUCTION_SIZE_EEPROM; 
-        addressIterator > startAddress - INCREMENT_VALUE; 
+        (addressIterator >= startAddress) && (addressIterator < endPointer_); 
         addressIterator -= INSTRUCTION_SIZE_EEPROM){
             for(uint8_t i = 0; i < INSTRUCTION_SIZE_EEPROM; i++){
                 char instruction = uart_.readByteEeprom(addressIterator + i);

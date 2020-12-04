@@ -37,6 +37,12 @@ class Servomotor {
             HUNDREDS_FACTOR = 100
         };
 
+        enum angleIndex: uint8_t {
+            HUNDREDS_INDEX,
+            TENS_INDEX,
+            UNIT_INDEX
+        };
+
     private:
         double ANGLE_TO_MS_FACTOR = 1.1/180;
         double MINIMUM_MS_VALUE = 0.9;

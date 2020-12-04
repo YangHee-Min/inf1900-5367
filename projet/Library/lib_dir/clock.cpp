@@ -1,4 +1,11 @@
+#ifndef F_CPU
+#define F_CPU 8000000UL
+#endif
+
+#include <avr/interrupt.h>
+#include <util/delay.h> 
 #include "clock.h"
+
 
 volatile uint16_t Clock::currentTime_ = 0;
 uint16_t Clock::stopTime_ = 0;
@@ -36,7 +43,7 @@ uint16_t Clock::getCurrentTimeInTicks(){
 }
 
 void Clock::setStartTime(const char* time){
-    Clock::startTime_ = convertTimeInTicks(time);
+    Clock::startTime_ = Time::convertTimeInTicks(time);
     Clock::stopTime_ = Clock::startTime_ - 1;
     if(Clock::stopTime_ > MAX_TIME)
         Clock::stopTime_ = MAX_TIME;
@@ -70,29 +77,13 @@ void Clock::updatePwmPin(){
     double newOcr1A = VOLT_TO_TICK_FACTOR * tenBitVoltValue + TICK_PERIOD_1_S;
     if(newOcr1A < MINIMUM_TICK_PERIOD)
         newOcr1A = MINIMUM_TICK_PERIOD;
-    OCR1A = (uint16_t) newOcr1A;
-}
-
-
-uint16_t Clock::convertTimeInTicks(const char* time){
-    const uint8_t TIME_SIZE = 5;
-    const uint8_t DECADE_SCALE_FACTOR = 10;
-    const uint8_t TIME_SCALE_FACTOR = 60;
-
-    uint8_t timeInNumber[TIME_SIZE];
-    for(int currentDigit = 0; currentDigit < TIME_SIZE - 1; currentDigit++){
-        timeInNumber[currentDigit] = Time::getDigitFromChar(time[currentDigit]);
-    }
-    uint16_t returnValue = (timeInNumber[0] * DECADE_SCALE_FACTOR  + timeInNumber[1]) * TIME_SCALE_FACTOR + timeInNumber[2] * DECADE_SCALE_FACTOR + timeInNumber[3];
-    if(returnValue > MAX_TIME)
-        return MAX_TIME;
-    
-    return returnValue;
+    uint16_t newOcr1a16Bit = newOcr1A;
+    OCR1A = newOcr1a16Bit;
 }
 
 void Clock::setTime(const char time[5]){
     resetTime();
-    setTime(convertTimeInTicks(time));
+    setTime(Time::convertTimeInTicks(time));
 }
 
 void Clock::setTime(uint16_t ticks){

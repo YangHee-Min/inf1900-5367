@@ -1,17 +1,10 @@
 #ifndef CLOCK_H
 #define CLOCK_H
 
-#ifndef F_CPU
-#define F_CPU 8000000UL
-#endif
-
-#include "uart.h"
+#include <avr/io.h>
 #include "can.h"
 #include "sonar.h"
 #include "time.h"
-#include <avr/io.h>
-#include <avr/interrupt.h>
-#include <util/delay.h> 
 
 class Clock
 {
@@ -27,7 +20,6 @@ class Clock
         void stopClock();
         void toggleClock();
         static void updatePwmPin();
-        static uint16_t convertTimeInTicks(const char* time);
 
         static volatile uint16_t currentTime_;
         static uint16_t stopTime_;

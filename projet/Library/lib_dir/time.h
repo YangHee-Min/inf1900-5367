@@ -14,6 +14,10 @@ class Time{
 
         static bool timeIsValid(char time[TIME_SIZE]);
 
+        static uint16_t convertTimeInTicks(const char* time);
+
         static const uint8_t TENS_FACTOR = 10;
+
+        static const uint16_t MAX_TIME = 1439;
 };
 #endif
