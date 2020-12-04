@@ -9,9 +9,7 @@
 #ifndef MOTOR_H
 #define MOTOR_H
 
-#define F_CPU 8000000UL
 #define PRESCALER 8
-#define __DELAY_BACKWARD_COMPATIBLE__
 #include <avr/io.h>
 #include <util/delay.h>
 

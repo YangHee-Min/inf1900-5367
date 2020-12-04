@@ -9,14 +9,6 @@
 #ifndef SERVOMOTOR_H
 #define SERVOMOTOR_H
 
-#ifndef F_CPU
-#define F_CPU 8000000UL
-#endif
-
-#ifndef __DELAY_BACKWARD_COMPATIBLE__
-#define __DELAY_BACKWARD_COMPATIBLE__
-#endif
-
 #include <avr/io.h> 
 #include <util/delay.h>
 #include "debug.h"

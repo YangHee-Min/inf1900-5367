@@ -1,7 +1,3 @@
-#ifndef F_CPU
-#define F_CPU 8000000UL
-#endif
-
 #include <avr/interrupt.h>
 #include <util/delay.h> 
 #include "clock.h"

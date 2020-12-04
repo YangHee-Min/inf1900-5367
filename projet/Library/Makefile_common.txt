@@ -29,7 +29,7 @@ CFLAGS=-I. -I/usr/include/simavr -MMD -g -mmcu=$(MCU) -O$(OPTLEVEL) \
 	-Wall
 
 # Flags pour le compilateur en C++
-CXXFLAGS=-fno-exceptions
+CXXFLAGS=-fno-exceptions -DF_CPU=8000000UL -D__DELAY_BACKWARD_COMPATIBLE__
 
 #pour supprimer les fichiers lorsque l'on appel make clean
 REMOVE= rm -f
