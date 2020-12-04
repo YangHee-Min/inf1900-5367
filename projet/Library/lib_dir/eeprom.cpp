@@ -64,7 +64,7 @@ void Eeprom::deleteInstruction(const char tensChar, const char unitChar){
 
 void Eeprom::sortInstructionsTime(char* time){
     uint16_t earliestInstructionAddress = findEarliestInstructionAddress(time);
-    uart_.transmission(earliestInstructionAddress);
+    uart_.transmission(earliestInstructionAddress + '0');
     uint8_t numberOfCycles = (endPointer_ - earliestInstructionAddress) / INSTRUCTION_SIZE_EEPROM;
     uart_.transmission(numberOfCycles + '0');
     for(uint8_t currentCycle = 0; currentCycle < numberOfCycles; currentCycle++){

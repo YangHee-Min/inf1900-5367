@@ -117,8 +117,8 @@ void option1(Keyboard& keyboard, Clock& clock){
     char time[Time::TIME_SIZE] = {decadeHours, unitHours, decadeMinutes, unitMinutes};
     
     if(Time::timeIsValid(time)){
+        Eeprom::sortInstructionsTime(time);
         clock.setStartTime(time);
-        Eeprom::sortInstructionsTime(time);//a
     }
     else{
         printInvalidMessage();
