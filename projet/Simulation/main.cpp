@@ -118,6 +118,7 @@ void option1(Keyboard& keyboard, Clock& clock){
     
     if(Time::timeIsValid(time)){
         clock.setStartTime(time);
+        Eeprom::sortInstructionsTime(time);//a
     }
     else{
         printInvalidMessage();
@@ -274,4 +275,4 @@ int main(){
 
         }
     }
-}//a
+}
