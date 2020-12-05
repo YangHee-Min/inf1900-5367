@@ -1,4 +1,6 @@
 #include "sonar.h"
+#include <avr/interrupt.h>
+#include <util/delay.h>
 
 volatile bool Sonar::detectedObject_ = false;
 volatile uint16_t Sonar::lastDistance_ = 0;
@@ -11,7 +13,6 @@ Sonar::Sonar()
     DDRD |= (1<< trigPin_);
     DDRD &= ~(1 << INT0);
     initialisationISR();
-    debug_ = Uart();
 }
 
 ISR ( INT0_vect ) {

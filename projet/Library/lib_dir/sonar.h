@@ -2,9 +2,8 @@
 #define SONAR_H
 
 #include <avr/io.h>
-#include <util/delay.h>
-#include <avr/interrupt.h>
-#include "uart.h"
+
+
 
 class Sonar{
     public:
@@ -24,7 +23,6 @@ class Sonar{
         volatile uint8_t* portPtr_;
         uint8_t trigPin_;
         uint8_t echoPin_;
-        Uart debug_;
           
 };
 #endif

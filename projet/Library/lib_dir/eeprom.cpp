@@ -1,5 +1,6 @@
 #include "eeprom.h"
 #include "clock.h"
+#include "time.h"//
 
 uint16_t Eeprom::endPointer_ = Eeprom::INITIAL_ADDRESS;
 Uart Eeprom::uart_;
@@ -10,6 +11,7 @@ void Eeprom::addInstruction(char* timeTable, char* instructionTable){
         shiftInstructionsDown(insertionAddress);
 
     saveInstruction(insertionAddress, timeTable, instructionTable);
+    uart_.print("\nAction sauvegardée. Retour au menu principal...\n", 51);
 }
 
 void Eeprom::printInstructions(){
@@ -56,18 +58,18 @@ void Eeprom::deleteInstruction(const char tensChar, const char unitChar){
     uint8_t indexStartCopy = indexToDelete + INCREMENT_VALUE;
     uint16_t copyStartAddress = convertIndexToByte(indexStartCopy);
     if(copyStartAddress == INITIAL_ADDRESS || copyStartAddress >= endPointer_ + INSTRUCTION_SIZE_EEPROM){
-        uart_.print("Index invalide. Retour au menu principal... \n", 46);
+        uart_.print("\nIndex invalide. Retour au menu principal... \n", 46);
         return;
     }
     shiftInstructionsUp(copyStartAddress);
+    uart_.print("\nAction supprimée. Retour au menu principal...\n", 48);
 }
 
 void Eeprom::sortInstructionsTime(char* time){
     uint16_t earliestInstructionAddress = findEarliestInstructionAddress(time);
-    uart_.transmission(earliestInstructionAddress + '0');
     uint8_t numberOfCycles = (endPointer_ - earliestInstructionAddress) / INSTRUCTION_SIZE_EEPROM;
-    uart_.transmission(numberOfCycles + '0');
-    for(uint8_t currentCycle = 0; currentCycle < numberOfCycles; currentCycle++){
+    const uint8_t START_CYCLE = 0;
+    for(uint8_t currentCycle = START_CYCLE; currentCycle < numberOfCycles; currentCycle++){
         cycleInstructionsDown();
     } 
 }
@@ -88,8 +90,6 @@ void Eeprom::saveInstruction(uint16_t startAddress,
     address += INSTRUCTION_SIZE_ARRAY - INCREMENT_VALUE;
     if(startAddress == endPointer_)
         endPointer_ = address;
-    
-    uart_.print("Action sauvegardée. Retour au menu principal...\n", 50);
 }
 
 uint16_t Eeprom::findEarliestInstructionAddress(char* time){
@@ -143,7 +143,7 @@ void Eeprom::shiftInstructionsUp(uint16_t startAddress){
         endPointer_ -= INSTRUCTION_SIZE_EEPROM;
     }
     else{
-         uart_.print("Décalage vers le haut échoué. Retour au menu principal\n", 59);
+         uart_.print("\nDécalage vers le haut échoué. Retour au menu principal\n", 59);
     }
 }
 
@@ -160,7 +160,7 @@ void Eeprom::shiftInstructionsDown(uint16_t startAddress){
         endPointer_ += INSTRUCTION_SIZE_EEPROM;
     }
     else{
-         uart_.print("L'adresse insérée n'est pas valide. Retour au menu \n", 39);
+         uart_.print("\nL'adresse insérée n'est pas valide. Retour au menu principal...\n", 68);
     }
 }
 

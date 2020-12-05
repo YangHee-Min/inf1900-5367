@@ -1,13 +1,6 @@
-#include "../Library/lib_dir/sonar.h"
-#include "../Library/lib_dir/clock.h"
-#include "../Library/lib_dir/keyboard.h"
-#include "../Library/lib_dir/uart.h"
-#include "../Library/lib_dir/servomotor.h"
-#include "../Library/lib_dir/LEDBar.h"
-#include "../Library/lib_dir/time.h"
-#include "../Library/lib_dir/eeprom.h"
+#include "includes.h"
 #include <avr/io.h>
-#include <avr/interrupt.h>
+#include <avr/interrupt.h>//
 
 const uint8_t MINIMUM_ANGLE_VALUE = 0;
 const uint8_t MAXIMUM_ANGLE_VALUE = 180;
@@ -42,6 +35,16 @@ void printInvalidMessage(){
     uart.print("\nOption invalide. Retour au menu principal...\n", 46);
 }
 
+void printInstruction(const char* instruction){
+    uint8_t lastIndex = STATE_INDEX_3;
+    if(instruction[DEVICE_INDEX] >= 'A' && instruction[DEVICE_INDEX] <= 'D'){
+        lastIndex = STATE_INDEX_1;
+    }
+    lastIndex++;
+    uart.print(instruction, lastIndex);
+    uart.print("\n", 2);
+}
+
 void initialisationISR(){
     cli ();
     EIMSK |= (1 << INT1);
@@ -56,7 +59,6 @@ ISR(INT1_vect){
 }
 
 bool validateMachineAction(char* machineInstruction, Keyboard& keyboard){
-    //uart.print("Entrez l’identifiant d’un dispositif suivi de sa valeur de configuration. (A|B|C|D)(0|1) ou (E|F)(000-180)\n", 112);
     char deviceLetter = keyboard.readKey();
     machineInstruction[DEVICE_INDEX] = deviceLetter;
 
@@ -119,6 +121,7 @@ void option1(Keyboard& keyboard, Clock& clock){
     if(Time::timeIsValid(time)){
         Eeprom::sortInstructionsTime(time);
         clock.setStartTime(time);
+        uart.print("\nHeure de départ sauvegardée. Retour au menu principal...\n", 60);
     }
     else{
         printInvalidMessage();
@@ -128,24 +131,25 @@ void option1(Keyboard& keyboard, Clock& clock){
 
 void executeInstruction(const char* machineInstruction, LEDBar& ledbar, Servomotor& servomotorE, Servomotor& servomotorF){
     if(machineInstruction[DEVICE_INDEX] >= 'A' && machineInstruction[DEVICE_INDEX] <= 'D'){
-            uint8_t door = machineInstruction[DEVICE_INDEX] - 'A';
-            if(machineInstruction[STATE_INDEX_1] == OPEN_CHAR)
-                ledbar.openDoor(door);
-            else if(machineInstruction[STATE_INDEX_1] == CLOSE_CHAR)
-                ledbar.closeDoor(door);
+        uint8_t door = machineInstruction[DEVICE_INDEX] - 'A';
+        if(machineInstruction[STATE_INDEX_1] == OPEN_CHAR)
+            ledbar.openDoor(door);
+        else if(machineInstruction[STATE_INDEX_1] == CLOSE_CHAR)
+            ledbar.closeDoor(door);
+    }
+    else if(machineInstruction[DEVICE_INDEX] == 'E' || machineInstruction[DEVICE_INDEX == 'F']){
+        char angleString[Servomotor::ANGLE_STRING_SIZE] = {machineInstruction[STATE_INDEX_1], machineInstruction[STATE_INDEX_2], machineInstruction[STATE_INDEX_3]};
+        uint16_t angle = Servomotor::getAngleFromString(angleString);
+        
+        switch(machineInstruction[DEVICE_INDEX]){
+            case 'E':
+                servomotorE.changeAngle(angle);
+                break;
+            case 'F':
+                servomotorF.changeAngle(angle);
         }
-        else if(machineInstruction[DEVICE_INDEX] == 'E' || machineInstruction[DEVICE_INDEX == 'F']){
-            char angleString[Servomotor::ANGLE_STRING_SIZE] = {machineInstruction[STATE_INDEX_1], machineInstruction[STATE_INDEX_2], machineInstruction[STATE_INDEX_3]};
-            uint16_t angle = Servomotor::getAngleFromString(angleString);
-            
-            switch(machineInstruction[DEVICE_INDEX]){
-                case 'E':
-                    servomotorE.changeAngle(angle);
-                    break;
-                case 'F':
-                    servomotorF.changeAngle(angle);
-            }
-        }
+    }
+    uart.print("\nAction exécutée. Retour au menu principal...\n", 49);
 }
 
 void option2(LEDBar& ledbar, Keyboard& keyboard, Servomotor& servomotorE, Servomotor& servomotorF){
@@ -182,29 +186,17 @@ void option4(Keyboard& keyboard){
 }
 
 void option5(Keyboard& keyboard){
-    uart.print("Entrez le numéro d’une action à supprimer\n", 47);
+    uart.print("\nEntrez le numéro d’une action à supprimer\n", 47);
     char deleteValue1 = keyboard.readKey();
     char deleteValue2 = keyboard.readKey();
 
-    Eeprom::deleteInstruction(deleteValue1, deleteValue2);//
+    Eeprom::deleteInstruction(deleteValue1, deleteValue2);
 }
 
-/*
-H|H|M|M|G|X|X|X|
-Assumptions: 
-    - All actions are programmed in chronological order
-Logic: 
-    - If the instruction time hasn't been reached yet:
-        - If Clock::isClockRunning_ = false:
-            - Clock is finished. Any actions later than current time will not be executed.
-        - else:
-            - Clock is still running. Actions programmed for later might be executed.
-
-a
-*/
-void option6(Clock& clock, LEDBar& ledbar, Servomotor& servomotorE, Servomotor& servomotorF){
-    
-    uart.print("Option simulation choisie. Début de la simulation...\n", 55);
+void option6(Clock& clock, LEDBar& ledbar, Servomotor& servomotorE, Servomotor& servomotorF, LCM& lcd){
+    lcd.clear();
+    lcd << "Simulation";
+    uart.print("\nOption simulation choisie. Début de la simulation...\n", 55);
     clock.startClock();
     initialisationISR();
     bool isRunning = true;
@@ -212,20 +204,20 @@ void option6(Clock& clock, LEDBar& ledbar, Servomotor& servomotorE, Servomotor& 
     char time[Time::TIME_SIZE];
     char instruction[Eeprom::INSTRUCTION_SIZE_ARRAY];
     while(isRunning){
+        
         if(addressIterator >= Eeprom::endPointer_){
-            isRunning = false;
-            uart.print("END!\n", 6);
+            if(Clock::currentTime_ == Clock::stopTime_){
+                isRunning = false;
+            }
             continue;
         }
 
         Eeprom::readTime(time, addressIterator);
-        uart.print(time, Time::TIME_SIZE);
-        uart.print("\n", 2);
 
         if(clock.getCurrentTimeInTicks() >= Time::convertTimeInTicks(time)){
             Eeprom::readInstruction(instruction, addressIterator);
-            uart.print(instruction, Eeprom::INSTRUCTION_SIZE_ARRAY);
             executeInstruction(instruction, ledbar, servomotorE, servomotorF);
+            printInstruction(instruction);
             addressIterator += Eeprom::INSTRUCTION_SIZE_EEPROM;
         }
         else{
@@ -246,8 +238,11 @@ int main(){
     LEDBar ledbar = LEDBar(PORTC0, PORTC1, PORTC2, PORTC3, PORTC4, &PORTC);
     Servomotor servomotorE = Servomotor(PORTA6, &PORTA);
     Servomotor servomotorF = Servomotor(PORTA7, &PORTA);
+    LCM lcd = LCM(&DDRB, &PORTB);
 
     for(;;){
+        lcd.clear();
+        lcd << "Configuration";
         displayMenu();
         char optionKey = keyboard.readKey();
         
@@ -268,7 +263,7 @@ int main(){
                 option5(keyboard);
                 break;
             case '6':
-                option6(clock, ledbar, servomotorE, servomotorF);
+                option6(clock, ledbar, servomotorE, servomotorF, lcd);
                 break;
             default:
                 printInvalidMessage();

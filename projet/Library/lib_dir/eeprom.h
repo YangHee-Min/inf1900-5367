@@ -1,7 +1,6 @@
 #ifndef EEPROM_H
 #define EEPROM_H
 
-#include "time.h"
 #include "uart.h"
 #include <avr/io.h>
 

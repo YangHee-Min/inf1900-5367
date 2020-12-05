@@ -7,6 +7,7 @@
 ***********************************/
 
 #include "servomotor.h"
+#include "time.h"
 
 Servomotor::Servomotor(uint8_t pinServomotor, volatile uint8_t* portPtr)
     :pinServomotor_(pinServomotor)

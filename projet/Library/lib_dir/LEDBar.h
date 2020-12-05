@@ -15,12 +15,11 @@
 
 #include <avr/io.h> 
 #include <util/delay.h>
-#include "uart.h"
 
 class LEDBar {
 
     public:
-
+        // Constructor
         LEDBar(uint8_t SHC,
                 uint8_t STC, 
                 uint8_t DS, 
@@ -28,11 +27,15 @@ class LEDBar {
                 uint8_t OE, 
                 volatile uint8_t* portPtr);
 
+        // Functions
         void openDoor(uint8_t doorType);
         void closeDoor(uint8_t doorType);
         void displayState();
+
+        // Attributes
         uint32_t LEDState_;
 
+        // Constants
         enum Doors
         {
             DOOR_A,
@@ -42,7 +45,7 @@ class LEDBar {
         };
         
     private:
-        
+        // Attributes
         uint8_t SHC_;
         uint8_t STC_;
         uint8_t DS_;
@@ -50,6 +53,7 @@ class LEDBar {
         uint8_t OE_;
         volatile uint8_t* portPtr_;
         
+        // Constants
         static const uint8_t MAX_LED_BAR_POSITION = 8;
         static const uint8_t MIN_BIT_POSITION = 0;
         static const uint8_t MAX_BIT_POSITION = 32;
