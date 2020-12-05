@@ -149,7 +149,6 @@ void executeInstruction(const char* machineInstruction, LEDBar& ledbar, Servomot
                 servomotorF.changeAngle(angle);
         }
     }
-    uart.print("\nAction exécutée. Retour au menu principal...\n", 49);
 }
 
 void option2(LEDBar& ledbar, Keyboard& keyboard, Servomotor& servomotorE, Servomotor& servomotorF){
