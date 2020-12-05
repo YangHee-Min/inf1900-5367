@@ -1,6 +1,6 @@
 #include "includes.h"
 #include <avr/io.h>
-#include <avr/interrupt.h>//
+#include <avr/interrupt.h>
 
 const uint8_t MINIMUM_ANGLE_VALUE = 0;
 const uint8_t MAXIMUM_ANGLE_VALUE = 180;
