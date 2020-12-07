@@ -1,0 +1,18 @@
+# Étapes pour compiler le projet:
+
+1. Compiler la librairie	
+	1.1. Aller dans le répertoire “inf1900-5367/projet/Library/lib_dir”
+	1.2. Exécuter la commande “make”.
+
+2. Compiler le programme de simulation.
+	2.1. Aller dans le répertoire "inf1900-5367/projet/Simulation".
+	2.2. Exécuter la commande "make".
+
+3. Exécuter le programme SimulIde
+	3.1. Ouvrir le circuit inf1900-5367/projet/montage.simu dans SimulIde.
+	3.1. Charger le firmware "inf1900-5367/projet/Simulation/main.hex".
+	3.2. Exécuter le programme dans SimulIde.
+
+4. Quelques étapes lors de l'exécution du programme dans SimulIde
+	4.1. S'assurer d'allumer les sources de tensions variables.
+	4.2. S'assurer que la source de tension reliée au sonar n'est pas à 0 (un objet à 0 mètre du sonar est impossible).
