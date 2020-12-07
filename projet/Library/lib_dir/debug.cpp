@@ -11,10 +11,10 @@
 //! Prints specified message of specified size.
 //! \param debugMessage     Message to be printed
 //! \param size             Size of the message
-void Debug::DEBUG_PRINT(const char debugMessage[], const unsigned int size){
+void Debug::DEBUG_PRINT_MSG(const char debugMessage[], const unsigned int size){
     uart_.print(debugMessage, size);
 }
 
-void Debug::transmission(uint8_t data){
+void Debug::DEBUG_PRINT_VALUE(uint8_t data){
     uart_.transmission(data);
 }
