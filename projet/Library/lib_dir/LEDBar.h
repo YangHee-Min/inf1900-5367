@@ -30,7 +30,6 @@ class LEDBar {
         // Functions
         void openDoor(uint8_t doorType);
         void closeDoor(uint8_t doorType);
-        void displayState();
 
         // Attributes
         uint32_t LEDState_;
@@ -45,6 +44,9 @@ class LEDBar {
         };
         
     private:
+        //Functions
+        void displayState();
+        
         // Attributes
         uint8_t SHC_;
         uint8_t STC_;

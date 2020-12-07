@@ -22,7 +22,6 @@ enum doorState{OPEN, CLOSE};
 enum doorStateChar{OPEN_CHAR = '0', CLOSE_CHAR = '1'};
 Uart uart;
 
-
 void displayMenu(){
     uart.print("\n", 2);
     uart.print("1- Définir l'heure de départ\n", 32);
