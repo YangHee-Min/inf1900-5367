@@ -2,6 +2,8 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
+volatile bool isClockInterrupted = false;
+
 const uint8_t MINIMUM_ANGLE_VALUE = 0;
 const uint8_t MAXIMUM_ANGLE_VALUE = 180;
 const uint8_t ADDRESS_SIZE = 8;
@@ -54,8 +56,7 @@ void initialisationISR(){
 }
 
 ISR(INT1_vect){
-    Clock::isClockStopped_ = true;
-    uart.transmission(Clock::isClockStopped_ + '0');
+    isClockInterrupted = true;
 }
 
 bool validateMachineAction(char* machineInstruction, Keyboard& keyboard){
@@ -213,7 +214,7 @@ void option6(Clock& clock, LEDBar& ledbar, Servomotor& servomotorE, Servomotor& 
 
         Eeprom::readTime(time, addressIterator);
 
-        if(clock.getCurrentTimeInTicks() >= Time::convertTimeInTicks(time)){
+        if((clock.getCurrentTimeInTicks() - Clock::startTime_) >= Time::convertTimeInTicks(time) - (Clock::startTime_)){
             Eeprom::readInstruction(instruction, addressIterator);
             executeInstruction(instruction, ledbar, servomotorE, servomotorF);
             printInstruction(instruction);
@@ -222,11 +223,20 @@ void option6(Clock& clock, LEDBar& ledbar, Servomotor& servomotorE, Servomotor& 
         else{
             if(Clock::isClockStopped_)
                 isRunning = false;
+            else if(isClockInterrupted)
+                isRunning = false;
         }
     }
     clock.stopClock();
     isRunning = true;
-    uart.print("Simulation terminée. Retour au menu principal...\n", 50);
+    if(isClockInterrupted){
+        isClockInterrupted = false;
+        uart.print("Simulation interrompu. Retour au menu principal...\n", 52);
+        clock.rewindToStartTime();
+    }
+    else{
+        uart.print("Simulation terminée. Retour au menu principal...\n", 50);
+    }
 }
 
 int main(){

@@ -1,6 +1,6 @@
 #include "eeprom.h"
 #include "clock.h"
-#include "time.h"//
+#include "time.h"
 
 uint16_t Eeprom::endPointer_ = Eeprom::INITIAL_ADDRESS;
 Uart Eeprom::uart_;

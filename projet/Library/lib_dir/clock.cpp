@@ -47,6 +47,10 @@ void Clock::setStartTime(const char* time){
     setTime(Clock::startTime_);
 }
 
+void Clock::rewindToStartTime(){
+    setTime(startTime_);
+}
+
 void Clock::resetTime(){
     Clock::currentTime_ = MIN_TIME;
     *portPtr_ |=  (1 << resetPin_);

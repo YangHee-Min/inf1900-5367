@@ -15,6 +15,7 @@ class Clock
                 uint8_t voltPin);
         uint16_t getCurrentTimeInTicks();
         void setStartTime(const char* time);
+        void rewindToStartTime();
         void resetTime();
         void startClock();
         void stopClock();
