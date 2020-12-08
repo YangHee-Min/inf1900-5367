@@ -2,26 +2,24 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
+// Constants
 volatile bool isClockInterrupted = false;
-
 const uint8_t MINIMUM_ANGLE_VALUE = 0;
 const uint8_t MAXIMUM_ANGLE_VALUE = 180;
 const uint8_t ADDRESS_SIZE = 8;
 const uint8_t INITIAL_ADDRESS = 0x0000;
-
 const uint8_t INSTRUCTION_SIZE = 5;
-
 enum instructionIndex:uint8_t{
     DEVICE_INDEX,
     STATE_INDEX_1, 
     STATE_INDEX_2,
     STATE_INDEX_3
 };
-
 enum doorState{OPEN, CLOSE};
 enum doorStateChar{OPEN_CHAR = '0', CLOSE_CHAR = '1'};
 Uart uart;
 
+//! Function to display the menu of options
 void displayMenu(){
     uart.print("\n", 2);
     uart.print("1- Définir l'heure de départ\n", 32);
@@ -32,10 +30,13 @@ void displayMenu(){
     uart.print("6- Démarrer la simulation\n", 27);
 }
 
+//! Function to display error message
 void printInvalidMessage(){
     uart.print("\nOption invalide. Retour au menu principal...\n", 46);
 }
 
+//! Function to display an instruction 
+//! \param instruction  Pointer to a char of instruction 
 void printInstruction(const char* instruction){
     uint8_t lastIndex = STATE_INDEX_3;
     if(instruction[DEVICE_INDEX] >= 'A' && instruction[DEVICE_INDEX] <= 'D'){
@@ -46,6 +47,7 @@ void printInstruction(const char* instruction){
     uart.print("\n", 2);
 }
 
+//! Function to initialize the ISR  
 void initialisationISR(){
     cli ();
     EIMSK |= (1 << INT1);
@@ -54,10 +56,16 @@ void initialisationISR(){
 
 }
 
+//! ISR that stops the clock when the D3 button is pressed
 ISR(INT1_vect){
     isClockInterrupted = true;
 }
 
+//! Validates if the machine instruction has valid inputs.
+//! \param  machineInstruction  Instruction to be verified
+//! \param  keyboard            Keyboard linked to atmega
+//! \return true if inputted machine instruction is valid. 
+//!         False if not. 
 bool validateMachineAction(char* machineInstruction, Keyboard& keyboard){
     char deviceLetter = keyboard.readKey();
     machineInstruction[DEVICE_INDEX] = deviceLetter;
@@ -110,6 +118,9 @@ bool validateMachineAction(char* machineInstruction, Keyboard& keyboard){
     return false;
 }
 
+//! Function that allows the user to set an initial time
+//! \param keyboard  Variable of the class Keyboard to manipulate the keyboard
+//! \param clock     Variable of the class Clock to manipulate the clock
 void option1(Keyboard& keyboard, Clock& clock){
     uart.print("\nEntrez l’heure et les minutes de départ de la simulation. HHMM\n", 68);
     char decadeHours = keyboard.readKey();
@@ -128,7 +139,11 @@ void option1(Keyboard& keyboard, Clock& clock){
     }
     
 }
-
+//! Function to execute an instruction which manipulates the LEDBar and the servomotors
+//! \param machineInstruction  Pointer of char of the instruction to execute
+//! \param ledbar              Variable of the class LEDBar to manipulate the LEDbar
+//! \param servomotorE         Variable of the class Servomotor to manipulate the servomotor E
+//! \param servomotorE         Variable of the class Servomotor to manipulate the servomotor F
 void executeInstruction(const char* machineInstruction, LEDBar& ledbar, Servomotor& servomotorE, Servomotor& servomotorF){
     if(machineInstruction[DEVICE_INDEX] >= 'A' && machineInstruction[DEVICE_INDEX] <= 'D'){
         uint8_t door = machineInstruction[DEVICE_INDEX] - 'A';
@@ -151,6 +166,11 @@ void executeInstruction(const char* machineInstruction, LEDBar& ledbar, Servomot
     }
 }
 
+//! Function that allows the user manipulate the LEDbar and the servomotors during configuration
+//! \param ledbar              Variable of the class LEDBar to manipulate the LEDbars
+//! \param keyboard            Variable of the class Keyboard to manipulate the keyboard
+//! \param servomotorE         Variable of the class Servomotor to manipulate the servomotor E
+//! \param servomotorE         Variable of the class Servomotor to manipulate the servomotor F
 void option2(LEDBar& ledbar, Keyboard& keyboard, Servomotor& servomotorE, Servomotor& servomotorF){
     uart.print("\nEntrez l’identifiant d’un dispositif suivi de sa valeur de configuration. (A|B|C|D)(0|1) ou (E|F)(000-180)\n", 113);
     char machineInstruction[Eeprom::INSTRUCTION_SIZE_ARRAY];
@@ -162,11 +182,14 @@ void option2(LEDBar& ledbar, Keyboard& keyboard, Servomotor& servomotorE, Servom
     }
 }
 
+//! Function to display all the instructions set so far
 void option3(){
     uart.print("\nAffichage des actions programmées:\n", 37);
     Eeprom::printInstructions();
 }
 
+//! Function that allows the user to set instructions
+//! \param keyboard  Variable of the class Keyboard to manipulate the keyboard
 void option4(Keyboard& keyboard){
     uart.print("\nEntrez une action à programmer. HHMM (A|B|C|D)(0|1) ou (E|F)(000-180)\n", 72);
     char decadeHours = keyboard.readKey();
@@ -184,6 +207,8 @@ void option4(Keyboard& keyboard){
     Eeprom::addInstruction(time, machineInstruction);
 }
 
+//! Function that allows the user to delete function with the specified index.
+//! \param  keyboard    Variable of the class Keyboard to manipulate the keyboard 
 void option5(Keyboard& keyboard){
     uart.print("\nEntrez le numéro d’une action à supprimer\n", 47);
     char deleteValue1 = keyboard.readKey();
@@ -192,6 +217,12 @@ void option5(Keyboard& keyboard){
     Eeprom::deleteInstruction(deleteValue1, deleteValue2);
 }
 
+//! Function to start the simulation and executes all the instructions according to current time.
+//! \param  clock       Variable of the class Clock to manipulate the clock
+//! \param  ledbar      Variable of the class LEDBar to manipulate the LEDBars
+//! \param  servomotorE Variable of the class Servomotor to manipulate servomotor E
+//! \param  servomotorF Variable of the class Servomotor to manipulate servomotor F
+//! \param  lcd         Variable of the class LCM to manipulate the lcd screen
 void option6(Clock& clock, LEDBar& ledbar, Servomotor& servomotorE, Servomotor& servomotorF, LCM& lcd){
     lcd.clear();
     lcd << "Simulation";
@@ -247,13 +278,15 @@ int main(){
     Servomotor servomotorE = Servomotor(PORTA6, &PORTA);
     Servomotor servomotorF = Servomotor(PORTA7, &PORTA);
     LCM lcd = LCM(&DDRB, &PORTB);
-
+    
     for(;;){
         lcd.clear();
         lcd << "Configuration";
         displayMenu();
         char optionKey = keyboard.readKey();
         
+        // Switch case that executes option according to user's input.
+        // If key inputted is invalid, prints an invalid command input.
         switch(optionKey){
             case '1':
                 option1(keyboard, clock);
