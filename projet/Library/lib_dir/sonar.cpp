@@ -1,10 +1,22 @@
+/**********************************
+* File: sonar.cpp
+* Authors: Adam Halim, Chun Yang Li, Hee-Min Yang, Jean Janssen
+* Date: November 22 2020
+* Updated: November 26 2020
+* Description: Implementation of methods related to sonar.
+***********************************/
+
 #include "sonar.h"
 #include <avr/interrupt.h>
 #include <util/delay.h>
 
 volatile bool Sonar::detectedObject_ = false;
+
+// Variable holding the last distance detected by the sonar.
 volatile uint16_t Sonar::lastDistance_ = 0;
 
+//! Default constructor of sonar that initializes
+//! the port, the trig and echo pins.
 Sonar::Sonar()
     :portPtr_(&PORTD)
     ,trigPin_(PORTD5)
@@ -15,6 +27,8 @@ Sonar::Sonar()
     initialisationISR();
 }
 
+//! ISR for the echo pin.
+//! \param INT0   vector responsible for interrupt0
 ISR ( INT0_vect ) {
     uint32_t counter = 0;
     while(PIND & (1 << PIND2)){
@@ -24,6 +38,8 @@ ISR ( INT0_vect ) {
     Sonar::detectedObject_ = true;
 }
 
+//! ISR for the trig pin to send out signals periodically.
+//! \param TIMER1_COMPB_vect    vector responsible for timer1.
 ISR ( TIMER1_COMPB_vect ) {
     PORTD ^= (1 << PORTD5);
     OCR1B += Sonar::TRIG_FREQUENCY;
@@ -31,6 +47,8 @@ ISR ( TIMER1_COMPB_vect ) {
         OCR1B = Sonar::TRIG_FREQUENCY;
 }
 
+//! Function that initializes registers for ISR 
+//! and pins for sonar.
 void Sonar::initialisationISR(){
     // Prevent any other isr
     cli ();
@@ -58,6 +76,8 @@ void Sonar::initialisationISR(){
     sei ();
 }
 
+//! Function that returns distance of an object.
+//! \return     Distance of the object from sonar.
 uint16_t Sonar::obstacleDetection(){
     while(!detectedObject_){}
     cli();

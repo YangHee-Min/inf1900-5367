@@ -1,3 +1,10 @@
+/**********************************
+* File: keyboard.h
+* Authors: Adam Halim, Chun Yang Li, Hee-Min Yang, Jean Janssen
+* Date: November 29 2020
+* Updated: December 1 2020
+* Description: Definition of methods related to keyboard.
+***********************************/
 
 #ifndef KEYBOARD_H
 #define KEYBOARD_H
@@ -8,18 +15,24 @@
 
 class Keyboard{
     public:
-    Keyboard(volatile uint8_t* portPtr, 
-                volatile uint8_t* pinPtr,
-                uint8_t demuxS1, 
-                uint8_t demuxS0, 
-                uint8_t muxS1, 
-                uint8_t muxS0,
-                uint8_t inputPin);
-    
-    bool buttonIsPressed(uint8_t button, volatile uint8_t& pinx);
-    char readKey();
+        // Constructor
+        Keyboard(volatile uint8_t* portPtr, 
+                    volatile uint8_t* pinPtr,
+                    uint8_t demuxS1, 
+                    uint8_t demuxS0, 
+                    uint8_t muxS1, 
+                    uint8_t muxS0,
+                    uint8_t inputPin);
+
+        // Functions
+        bool buttonIsPressed(uint8_t button, volatile uint8_t& pinx);
+        char readKey();
+        
     private:
+        // Function
         char readKeyboard();
+
+        // Attributes
         int currentScoutedKeyValue_;
         volatile uint8_t* portPtr_;
         volatile uint8_t* pinPtr_;
@@ -29,6 +42,8 @@ class Keyboard{
         uint8_t muxS0_;
         uint8_t inputPin_;
         Uart uart_;
+
+        // Constants
         static const uint8_t PAST_END_OF_ENUM = 16;
         static const uint8_t INPUT_DELAY = 1;
         enum KeyboardValue: uint8_t{KEY_0 = 0b0000,

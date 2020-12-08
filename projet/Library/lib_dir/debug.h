@@ -6,18 +6,17 @@
 * Description: Definition of methods related to debug.
 ***********************************/
 
-#include "string.h"
-#include "./uart.h"
+#include "uart.h"
 
 #ifndef DEBUG_H
 #define DEBUG_H
 class Debug{
-public:
-    // Functions
-    void DEBUG_PRINT_MSG(const char debugMessage[], const unsigned int size);
-    void DEBUG_PRINT_VALUE(uint8_t data);
-private:
-    // Attributes
-    Uart uart_;
+    public:
+        // Functions
+        void DEBUG_PRINT_MSG(const char debugMessage[], const unsigned int size);
+        void DEBUG_PRINT_VALUE(uint8_t data);
+    private:
+        // Attributes
+        Uart uart_;
 };
 #endif

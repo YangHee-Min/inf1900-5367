@@ -1,5 +1,23 @@
+/**********************************
+* File: keyboard.cpp
+* Authors: Adam Halim, Chun Yang Li, Hee-Min Yang, Jean Janssen
+* Date: November 29 2020
+* Updated: December 1 2020
+* Description: Implementation of methods related to keyboard.
+***********************************/
+
 #include "keyboard.h"
 
+//! Constructor by parameters of Keyboard 
+//! \param  portPtr     Pointer to the port (PORTX) on the atmega 
+//!                     to which clock is connected
+//! \param  pinPtr      Pointer to the port (PINX) on the atmega 
+//!                     to which clock is connected
+//! \param  demuxS1     S1 pin of demultiplexer
+//! \param  demuxS0     S0 pin of demultiplexer
+//! \param  muxS1       S1 pin of multiplexer
+//! \param  muxS0       S0 pin of multiplexer
+//! \param  inputPin    Y pin of multiplexer 
 Keyboard::Keyboard(volatile uint8_t *portPtr,
                 volatile uint8_t* pinPtr,
                 uint8_t demuxS1, 
@@ -19,6 +37,13 @@ Keyboard::Keyboard(volatile uint8_t *portPtr,
     DDRA &= ~(1 << inputPin_);
 }
 
+//! Function acting as debouncer for button when 
+//! keyboard button is pressed.
+//! \param      button  pin linked to button
+//! \param      pinx    port linked to keyboard 
+//!                     (PINA, PINB, etc)
+//! \return     true if button is pressed for 
+//!             DEBOUNCE_DELAY. False if not.
 bool Keyboard::buttonIsPressed(uint8_t button, volatile uint8_t& pinx){
     const double DEBOUNCE_DELAY = 10;
     _delay_ms(INPUT_DELAY);
@@ -31,6 +56,9 @@ bool Keyboard::buttonIsPressed(uint8_t button, volatile uint8_t& pinx){
     return false;
 }
 
+//! Function to assert that char pressed by user 
+//! is only being returned once.
+//! \return     char value pressed by user.
 char Keyboard::readKey(){
     char returnValue = readKeyboard();
     while(*pinPtr_ & (1 << inputPin_)){}
@@ -38,6 +66,8 @@ char Keyboard::readKey(){
     return returnValue;
 }
 
+//! Function to read the key inputted by the user.
+//! \return     char value of key pressed by user
 char Keyboard::readKeyboard(){
 
     for (currentScoutedKeyValue_ = KEY_0 ;; currentScoutedKeyValue_++){
@@ -176,6 +206,7 @@ char Keyboard::readKeyboard(){
         }
     }
 }
+
 
 
 

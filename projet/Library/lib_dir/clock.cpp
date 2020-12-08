@@ -1,3 +1,11 @@
+/**********************************
+* File: clock.cpp
+* Authors: Adam Halim, Chun Yang Li, Hee-Min Yang, Jean Janssen
+* Date: December 2 2020
+* Updated: December 5 2020
+* Description: Implementation of methods related to clock.
+***********************************/
+
 #include <avr/interrupt.h>
 #include <util/delay.h> 
 #include "clock.h"
@@ -13,6 +21,13 @@ can Clock::clockCan_;
 Sonar Clock::clockSonar_;
 uint8_t Clock::voltPin_ = PORTA0;
 
+//! Constructor by parameters of Clock 
+//! \param portPtr  Pointer to the port (PORTX) on the atmega 
+//!                 to which clock is connected
+//! \param pwmPin   Pin which generates the pwm
+//! \param resetPin Pin that resets the clock
+//! \param voltPin  Pin that controls the speed of the clock 
+//!                 linked to the variable voltage source.
 Clock::Clock(volatile uint8_t* portPtr, 
             uint8_t pwmPin, 
             uint8_t resetPin,
@@ -34,10 +49,14 @@ Clock::Clock(volatile uint8_t* portPtr,
     DDRD |= (1 << pwmPin_) | (1 << resetPin_);
 }
 
+//! Gets the current time on the clock
+//! \return  Returns the current time 
 uint16_t Clock::getCurrentTimeInTicks(){
     return Clock::currentTime_;
 }
 
+//! Sets the initial time on the clock
+//! \param time  Pointer to a char of the format HHMM which indicates hours and minutes 
 void Clock::setStartTime(const char* time){
     Clock::startTime_ = Time::convertTimeInTicks(time);
     Clock::stopTime_ = Clock::startTime_ - 1;
@@ -47,10 +66,12 @@ void Clock::setStartTime(const char* time){
     setTime(Clock::startTime_);
 }
 
+//! Resets the time to the initial time set by the user using setStartTime()
 void Clock::rewindToStartTime(){
     setTime(startTime_);
 }
 
+//! Resets the time to zero
 void Clock::resetTime(){
     Clock::currentTime_ = MIN_TIME;
     *portPtr_ |=  (1 << resetPin_);
@@ -58,19 +79,24 @@ void Clock::resetTime(){
     *portPtr_ &= ~(1 << resetPin_);
 }
 
+//! Starts the clock
 void Clock::startClock(){
     Clock::isClockStopped_ = false;
     setTimerFrequency(TICK_PERIOD_1_S);
 }
 
+//! Stops the clock
 void Clock::stopClock(){
     isClockStopped_ = true;
 }
 
+//! Pauses the clock if the clock is running, 
+//! starts the clock if the clock is paused
 void Clock::toggleClock(){
     isClockStopped_ = !isClockStopped_;
 }
 
+//! Accelerates or slows the clock speed depending on the output of voltage
 void Clock::updatePwmPin(){
     uint16_t tenBitVoltValue = Clock::clockCan_.lecture(Clock::voltPin_);
     double VOLT_TO_TICK_FACTOR = -9.925;
@@ -81,23 +107,27 @@ void Clock::updatePwmPin(){
     OCR1A = newOcr1a16Bit;
 }
 
+//! Changes the current time on the clock
+//! \param time  Array of char of the format HHMM which indicates hours and minutes
 void Clock::setTime(const char time[5]){
     resetTime();
     setTime(Time::convertTimeInTicks(time));
 }
 
+//! Changes the current time on the clock
+//! \param ticks  Time in number of minutes
 void Clock::setTime(uint16_t ticks){
     resetTime();
     Clock::currentTime_ = ticks;
     _delay_ms(5);
     for(uint16_t i = 0; i < Clock::currentTime_; i++){
         *portPtr_ |= (1 << pwmPin_);
-        //_delay_ms(1);
         *portPtr_ &= ~(1 << pwmPin_);
-        //_delay_ms(1);
     }
 }
 
+//! Sets the frenquency of the timer
+//! \param ticks  Time in number of minutes
 void Clock::setTimerFrequency ( uint16_t ticks ) {
     cli();
     OCR1A = ticks;
@@ -114,6 +144,11 @@ void Clock::setTimerFrequency ( uint16_t ticks ) {
     sei();
 }
 
+//! Does not increment clock display by 1 minute if:
+//!     1. sonar detects an obstacle under two meters from it
+//!     2. clock is supposed to be stopped
+//!     3. Interrupts when current time on the clock reaches 
+//!        one minute before stop time.
 ISR ( TIMER1_COMPA_vect ) {
     if(Clock::clockSonar_.lastDistance_ < Sonar::TWO_METER_TICK_VALUE){
         return;
@@ -125,10 +160,13 @@ ISR ( TIMER1_COMPA_vect ) {
         Clock::isClockStopped_ = true;
         return;
     }
-        
+    
     Clock::updatePwmPin();
+
+    // Increment clock display by 1 minute
     *Clock::portPtrGlobal_ |= (1 << Clock::pwmPinGlobal_);
     *Clock::portPtrGlobal_ &= ~(1 << Clock::pwmPinGlobal_);
+    
     Clock::currentTime_++;
     if(Clock::currentTime_ > Clock::MAX_TIME)
         Clock::currentTime_ = 0;

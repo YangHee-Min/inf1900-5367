@@ -8,6 +8,14 @@
 
 #include "LEDBar.h"
 
+//! Constructor by parameters of LEDBar
+//! \param SHC  Shift register
+//! \param STC  Latch register
+//! \param DS   Serial input
+//! \param MR   Reset register
+//! \param OE   Output enable
+//! \param portPtr  Pointer to the port on the atmega to which
+//!                 the LEDBars are connected to.
 LEDBar::LEDBar(uint8_t SHC,
         uint8_t STC, 
         uint8_t DS, 
@@ -25,16 +33,16 @@ LEDBar::LEDBar(uint8_t SHC,
     DDRC |= (1 << SHC) | (1 << STC) | (1 << DS) | (1 << MR) | (1 << OE);
 }
 
-
+//! Displays the current state of the LEDBars
 void LEDBar::displayState(){
-    *portPtr_ |= (1 << MR_); /* Memory mode on */
-    *portPtr_ &= ~(1 << OE_); /* Display mode on */
+    *portPtr_ |= (1 << MR_); 
+    *portPtr_ &= ~(1 << OE_); 
     for(uint8_t i = MAX_BIT_POSITION; i > MIN_BIT_POSITION; i--){
         if(LEDState_ & ( (uint32_t)1 << (i - 1))){
-            *portPtr_ |= (1 << DS_); /* DS */
+            *portPtr_ |= (1 << DS_); 
         }
         else{
-            *portPtr_ &= ~(1 << DS_); /* DS */
+            *portPtr_ &= ~(1 << DS_); 
         }
 
         *portPtr_ &= ~(1 << SHC_);
@@ -44,11 +52,13 @@ void LEDBar::displayState(){
     
     *portPtr_ &= ~(1 << STC_);
     
-    *portPtr_ |= (1 << STC_); /* LATCH */
+    *portPtr_ |= (1 << STC_); 
     
     *portPtr_ &= ~(1 << STC_);
 }
 
+//! Opens the specified door and animates the process
+//! \param doorType     The door that will be opened
 void LEDBar::openDoor(uint8_t doorType){
     for(uint8_t i = MAX_LED_BAR_POSITION; i > MIN_BIT_POSITION; i--){
         
@@ -58,6 +68,8 @@ void LEDBar::openDoor(uint8_t doorType){
     }
 }
 
+//! Closes the specified door and animates the process
+//! \param doorType     The door that will be closed
 void LEDBar::closeDoor(uint8_t doorType)
 {
     for(uint8_t i = MIN_BIT_POSITION; i < MAX_LED_BAR_POSITION; i++)
