@@ -132,7 +132,8 @@ Identification:
 | Le sonar fonctionne à +/- 1 cm               |   (2/2.0)   |
 | __Résultat partiel__                         | __(8/10.0)__|
 
-__Total des points: 90.75/100__
+__Total: 90.75/100__
+__Total des points: 18.15/20__
 
 # Commentaires du correcteur:
 
